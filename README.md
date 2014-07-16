@@ -1,7 +1,4 @@
-# Lemyr
-
-![Lemyr Logo](doc/lemyr-logo.png)
-[Lemyr.co](http://www.lemyr.co)
+[![Lemyr Logo](doc/lemyr-logo.png)](http://lemyr.co)
 
 Lemyr (lēmər): a web based platform for managing membership-based businesses. Originally designed for coworking spaces, Lemyr takes the tedium out of managing your members.
 
