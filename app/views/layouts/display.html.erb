@@ -1,0 +1,561 @@
+<html class="<%= controller_name %>">
+ <head>
+  <title><%=LocationSettings.get.name%></title>
+  <%= stylesheet_link_tag    "scaffolds", :media => "all" %>
+  <%= stylesheet_link_tag    "application", :media => "all" %>
+  <%= javascript_include_tag "application" %>
+  <script src="/assets/jquery.jfeed.packed.js" type="text/javascript"></script>
+  <link rel="shortcut icon" href="/assets/favicon.ico"/>
+  <style type="text/css">
+  body {
+    background-color: #9CDBF8; padding: 0px; margin: 0px;
+    font-family: 'Futura', 'PT Sans', helvetica;
+    overflow: hidden;
+    width: 100%;
+    height: 100%;
+    line-height: 0.85em;
+  }
+  #HomeLogo { top: 0px; left: 0px; }
+  #MainContainer {
+      width: 100%;
+      height: 100%;
+      margin: 0 auto;
+      position: absolute;
+      top: 0px; left: 0px;
+      overflow: hidden;
+      border: none;
+      padding: 0px;
+      background-color: transparent;
+  }
+
+  .displayWindow
+  {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0px; left: 0px;
+  }
+
+  .cubeContainer {
+    width:174px;
+    height:174px;
+    -moz-perspective: 800px;
+    -webkit-perspective: 800px;
+    perspective: 800px;
+    float: left;
+  }
+
+  .cubeContainer div.side {
+    width:100%;
+    height:100%;
+    position:absolute;
+    top:0;
+    left:0;
+
+    /* Enabling 3d space for the transforms */
+    -moz-transform-style: preserve-3d;
+    -webkit-transform-style: preserve-3d;
+    transform-style: preserve-3d;
+
+    backface-visibility: hidden;
+   -moz-backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+
+    transition:0.8s;
+    -moz-transition:0.8s;
+    -webkit-transition:0.8s;
+  }
+
+  .sideA {
+    z-index:1000;
+  }
+
+  .sideB {
+    z-index:1;
+    opacity:0;
+    -moz-transform:rotateY(180deg);
+    -webkit-transform:rotateY(180deg);
+    transform:rotateY(180deg);
+  }
+
+  .sideB img { width: 100%; height: 100%; }
+
+
+  .cubeContainer.flipped div.sideA {
+    opacity:0;
+    -moz-transform:rotateY(-180deg);
+    -webkit-transform:rotateY(-180deg);
+    transform:rotateY(-180deg);
+  }
+
+  .cubeContainer.flipped div.sideB {
+    opacity:1;
+    -moz-transform:rotateY(0deg);
+    -webkit-transform:rotateY(0deg);
+    transform:rotateY(0deg);
+  }
+
+  p {
+    color: #fff; font-weight: bold;
+    font-size: 84px;
+    margin: 0.1em;
+  }
+
+  #CubeWindow { padding: 0px; padding-top: 20px; }
+
+  #CheckInDisplay { display: none; text-align: right; background-color: #000;  z-index:-1000;}
+
+  .avatar {
+      width: 190px; height: 190px; padding: 2px;
+      text-align: left;
+      padding: 10px;
+      height: auto;
+   }
+
+  .avatar img {
+      max-height: 100px; width: auto;
+      -webkit-border-radius:100px;
+      -moz-border-radius:100px;
+      border-radius:100px;
+   }
+
+  .avatarComment {
+    font-size: 32px;
+    display:none;
+    line-height:1.1em;
+    width: auto;
+  }
+
+  .avatarName {
+      font-size: 36px;
+      color: #fff;
+      font-weight: bold;
+      line-height: 0.85em;
+      z-index: 2000;
+      text-align: left;
+  }
+
+  #DateDisplay { display: none; text-align: center; padding-top: 75px; background-color: #9CDBF8; color: #000; z-index:-1000;}
+  #DateDisplay div { line-height: 1.0em; }
+  #DayOfTheWeek { font-size: 128px; font-weight: bold; }
+  #TodaysDate { font-size: 512px; font-weight: normal; }
+  #TodaysMonth {  font-size: 256px; }
+
+  #HeadlinesDisplay {
+      line-height: 0.05em; display: none;
+      background-color: #fff; color: #000; z-index:-1000;
+      font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica; font-weight: normal;
+  }
+
+  #HeadlinesDisplay #NewsFeedHeader {
+    font-size: 56px;
+    color: #000; padding: 10px; height: 80px; width: 100%;
+  }
+  #HeadlinesDisplay #NewsFeedFooter {
+    text-align: right;  line-height: 1.0em;
+    font-size: 38px;
+    width: 100%; padding-right: 30px;
+  }
+
+  #HeadlinesDisplay #NewsFeed { width: 100%; height: 920px; }
+
+  #HeadlinesDisplay #NewsFeed .story { width: 100%; height: 100%; overflow: hidden; }
+  #HeadlinesDisplay #NewsFeed .story .headline {
+    height: 100%; width: 40%; float: left;
+    line-height: 1.45em; color: #fff; font-size: 64px;
+    background-color: #000;
+    /*opacity:0.75; -moz-opacity:0.75; -webkit-opacity:0.75; filter: alpha(opacity=75);*/
+    padding: 10px;
+    padding-top: 30px;
+    overflow: hidden;
+  }
+
+  #HeadlinesDisplay .story p.lede  { font-size: 0.5em; line-height: 1.5em; font-weight: lighter; font-style: italic; }
+
+  #HeadlinesDisplay #NewsFeed .story img {
+    display: inline; vertical-align: middle;
+    width: 58%; height: auto; }
+
+
+
+  #MessagesDisplay { display: none; text-align: right; background-color: #000;  z-index:-1000;}
+  #MessagesDisplay div.upcoming { color: #9CDBF8; font-size: 96px;}
+  #MessagesDisplay div.today { color: #F7903B; font-size: 96px;}
+  </style>
+
+  <script type="text/javascript">
+
+  // Side B is the logo side
+  function CubesSideB()
+  {
+    $('.cubeContainer').each(function(){
+       var cube = $(this);
+       cube.addClass('flipped');
+    });
+  }
+
+  // Side A is the content side (if you want it to be)
+  function CubesSideA()
+  {
+    $('.cubeContainer').each(function(){
+       var cube = $(this);
+       setTimeout(function() { cube.removeClass('flipped'); }, (Math.random() * 3) * 200);
+    });
+  }
+
+  // convenience function to clear out the side A
+  function ClearSideA()
+  {
+    $('.cubeContainer .sideA').each(function(){
+       var cube = $(this);
+       cube.html('');
+    });
+  }
+
+  var currentComment = 0;
+
+  function processNextCheckInComment()
+  {
+      var numComments = $('.avatarComment').length;
+
+      // no comments so let's not do anything
+      if (numComments == 0) return;
+
+      // end of the line
+      if (currentComment == numComments)
+      {
+
+        setTimeout(function() {
+          CubesSideA();
+          UpdateDisplay();
+        }, 5000);
+
+        return;
+      }
+
+      // prevent the main loop from kicking us out
+      clearTimeout(currentTimer);
+
+      var prev = $('.avatarComment:nth('+currentComment+')');
+      if (prev) prev.fadeOut("slow");
+
+      currentComment++;
+
+      if (currentComment < numComments)
+      {
+        var next = $('.avatarComment:nth('+currentComment+')');
+        if (next) next.fadeIn("slow").css("display","inline-block");
+      }
+
+      setTimeout(function() { processNextCheckInComment(); }, 10000);
+  }
+
+  // The Check In display shows currently active members in the space
+  function DoCheckInDisplay()
+  {
+     $.get('/checkedin.json', {}, function(data, textStatus, jqXHR)
+     {
+        if (data.checkins.length <= 0)// && false)
+        {
+          SkipCurrentDisplay();
+          return;
+        }
+
+        var cubeIndex = 12; // skip down to the second line of cubes
+
+
+        for (i = 0; i < data.checkins.length; i++)
+        {
+          var user = data.checkins[i];
+
+          var content = "<div class='avatarWrapper'>";
+          content = content + "<span class='avatarComment'>"+user.comment+"</span>";
+          content = content + "<div class='avatar status"+user.checkin_status_id+"'>";
+          content = content + "<img src='/avatar/"+user.user.id+"'>";
+          content = content + "<span class='avatarName'>"+user.user.name+"</span></div>";
+          content = content + "</div>";
+          content = content + "</div>";
+
+          $('.cubeContainer:nth('+cubeIndex+')').find('.sideA').html(content);
+
+          do {
+            cubeIndex += 2;
+          } while (cubeIndex == 0)
+        }
+
+        // flip the first row of cubes right away
+        for (i = 0; i < 11; i++)
+          $('.cubeContainer:nth('+i+')').removeClass('flipped');
+
+        // bring the whole thing in
+        $('#CheckInDisplay').fadeIn('slow');
+
+        // show the side A's (result: hiding the logos)
+        setTimeout(function() {
+            CubesSideA();
+            currentComment = -1;
+            processNextCheckInComment(); }, 1500);
+
+     }, "json");
+
+     return 30 * 1000; // not used
+  }
+
+    // news headline state vars
+  var currentHeadline = 0;
+  var headlines = null;
+
+  function processNextHeadline()
+  {
+     // no headlines, so let's move on
+     if (headlines == null || currentHeadline == headlines.length)
+     {
+        CubesSideA();
+        UpdateDisplay();
+        return;
+     }
+     else
+     {
+        // prevent the main loop from kicking us out
+        clearTimeout(currentTimer);
+     }
+
+     // load up the next message and fade it in, then out
+     $('#NewsFeed').hide(); $('#NewsFeed').html('');
+
+     var item = headlines[currentHeadline++];
+     var feedItemDiv = '<div>' + item.description + '</div>';
+
+     var img = $(feedItemDiv).find('img');
+     img.removeAttr("align"); img.removeAttr("alt"); img.removeAttr("class");
+     img.removeAttr("width"); img.removeAttr("height"); img.removeAttr("title");
+     var src = img.attr("src").replace("image_200-nocrop","image_470/files/myrtle")
+     img.attr("src", src);
+
+     var storyDiv = $('<div class="story"></div>');
+     storyDiv.append("<div class='headline'><strong>" + item.title + "<strong><p class='lede'>"+$(feedItemDiv).find('h3').text()+"</p></div>");
+     storyDiv.append(img);
+     $('#NewsFeed').append(storyDiv);
+
+     $('#NewsFeed').fadeIn("slow", function()
+     {
+        setTimeout(function() {
+          $('#NewsFeed').fadeOut("slow", function()
+          {
+            processNextHeadline();
+          });
+        }, 7 * 1000);
+     });
+  }
+
+  function DoHeadlinesDisplay()
+  {
+      CubesSideA();
+      // pull in the RSS (gotta proxy to avoid cross-domain stuff)
+      jQuery.getFeed({
+          url: '/headlines',
+          success: function(feed) {
+
+              headlines = feed.items.slice(0,5);
+              currentHeadline = 0;
+              $('#NewsFeed').hide();
+              $('#HeadlinesDisplay').fadeIn('fast', function() { processNextHeadline(); });
+          }
+      });
+
+
+     return 60 * 1000; // this doesn't really get used for this particular display
+  }
+
+  // Lobby message state vars
+  var currentMessage = 0;
+  var messages = null;
+
+  function processNextLobbyMessage()
+  {
+     // no messages, so let's move on
+     if (messages == null || currentMessage == messages.length)
+     {
+        CubesSideA();
+        UpdateDisplay();
+        return;
+     }
+     else
+     {
+        // prevent the main loop from kicking us out
+        clearTimeout(currentTimer);
+     }
+
+     // load up the next message and fade it in, then out
+     $('#LobbyMessage').hide();
+     $('#LobbyMessage').html(messages[currentMessage++].text);
+     $('#LobbyMessage').fadeIn("slow", function()
+     {
+        setTimeout(function() {
+          $('#LobbyMessage').fadeOut("slow", function()
+          {
+            processNextLobbyMessage();
+          });
+        }, 10 * 1000);
+     });
+  }
+
+
+  function DoMessagesDisplay()
+  {
+      CubesSideA();
+
+      $.get('/lobby_messages.json', {}, function(data, textStatus, jqXHR)
+      {
+         // No lobby messages? Let's not waste time
+        if (data.messages.length <= 0)
+        {
+          SkipCurrentDisplay()
+          return;
+        }
+
+        messages = data.messages;
+        currentMessage = 0;
+        $('#LobbyMessage').hide();
+        $('#MessagesDisplay').fadeIn('fast', function() { processNextLobbyMessage(); });
+      });
+
+
+     return 60 * 1000; // this doesn't really get used for this particular display
+  }
+
+  function getClock()
+  {
+    var d = new Date();
+
+    var hours = d.getHours();
+    var mins = d.getMinutes();
+    var secs = d.getSeconds();
+    var meridian=(hours>=12?"pm":"am");
+    hours -= (hours>=13?12:0);
+
+    if (hours == 0) hours = 12;
+    if (mins < 10) mins = "0" + mins;
+
+    return hours+":"+mins+""+meridian;
+  }
+
+
+  function DoDateDisplay()
+  {
+      var d = new Date();
+      var weekday = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+      var month = [ "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" ];
+
+      $('#DayOfTheWeek').html(weekday[d.getDay()]  + " @ " + getClock());
+      $('#TodaysMonth').html(month[d.getMonth()]);
+      $('#TodaysDate').html(d.getDate());
+      $('#DateDisplay').fadeIn('slow');
+
+      // show the side A's (hiding the logo)
+      setTimeout(function() { CubesSideA(); }, 1500);
+
+      return 6 * 1000; // this doesn't really get used
+  }
+
+  // Main display state vars
+  var currentDisplay = 0;
+  var currentTimer = null;
+
+  var displayFuncs = [
+      DoCheckInDisplay
+      ,DoDateDisplay
+      ,DoMessagesDisplay
+      //,DoHeadlinesDisplay
+  ];
+
+  function SkipCurrentDisplay()
+  {
+      clearTimeout(currentTimer); // blow out the current timer to prevent unexpected calls
+      UpdateDisplay(); // move on to the next one
+  }
+
+  // This is the main loop
+  function UpdateDisplay()
+  {
+      $('.displayWindow').not('#CubeWindow').fadeOut("fast");
+
+      CubesSideB(); // Hide the side A's (show the logo)
+      ClearSideA(); // Remove any content that may have existed
+
+      // We need to wait a second for the cubes to cover the screen
+      setTimeout(function() {
+        var waitTime = displayFuncs[currentDisplay++]();
+        if (currentDisplay >= displayFuncs.length) currentDisplay = 0;
+        currentTimer = setTimeout(function() { UpdateDisplay(); }, waitTime);
+      }, 1000);
+  }
+
+
+  $(document).ready(function()
+  {
+      var mainWindow = $('#CubeWindow');
+      for (var i = 0; i < 66; i++)
+      {
+        mainWindow.append('<div class="cubeContainer"><div class="side sideA"></div>'
+                          + '<div class="side sideB"><img src="/assets/lemyr-banner.png"></div>'
+                          + '</div>');
+      }
+
+      // kick it off!
+      UpdateDisplay();
+
+      // every once in a while, do a full page reload to clear stuff and load the latest code
+      setTimeout(function() { window.location.reload() }, 45 * 60 * 1000);
+  });
+
+  </script>
+</head>
+<body>
+
+<div id="MainContainer">
+
+<!-- -->
+<div id="CubeWindow" class="displayWindow">
+</div>
+
+<!-- -->
+<div id="CheckInDisplay" class="displayWindow">
+  <p style="margin-right: 100px; margin-top: 100px">Who's coworking today?</p>
+  <div style="position: absolute; left: 10px; top: 10px; color: #fff; font-size: 24px; text-align: left; line-height: 1.2em">
+    Available
+    <div style="width: 64px; height: 24px;" class="status1"></div>
+    <div style="width: 64px; height: 24px;" class="status2"></div>
+    <div style="width: 64px; height: 24px;" class="status3"></div>
+    <div style="width: 64px; height: 24px;" class="status4"></div>
+    Do Not Disturb
+  </div>
+  <p style="color: #9CDBF8; font-size: 48px; position: absolute; bottom: 150px; right: 20px; font-weight: lighter; text-align: left;">check in at members.coworkmyr.com</p>
+</div>
+
+<!-- -->
+<div id="DateDisplay" class="displayWindow">
+  <div id="TodaysMonth"></div>
+  <div id="TodaysDate"></div>
+  <div id="DayOfTheWeek"></div>
+</div>
+
+<!-- -->
+<div id="HeadlinesDisplay" class="displayWindow">
+  <div id="NewsFeedHeader">Local News & Information from <img src="/assets/thedigitelmyr_text_600.png" style="display: inline; vertical-align: middle;"></div>
+  <div id="NewsFeed"></div>
+  <div id="NewsFeedFooter">(get links and details at http://myr.sc) &nbsp;</div>
+</div>
+
+<!-- -->
+<div id="MessagesDisplay" class="displayWindow">
+  <p id="LobbyMessage" style="font-size: 89px; margin-right: 100px; margin-top: 150px; width: 1200px; float: right; line-height: 1.1em"></p>
+  <img src="/assets/lemyr-banner.png" style="position: absolute; bottom: 100px; left: 20px; width: 256px;">
+  <p style="position: absolute; bottom: 150px; right: 20px; font-weight: lighter; color: #F7903B; text-align: left;">coworkmyr.com</p>
+</div>
+
+
+
+</div>
+</body>
+</html>

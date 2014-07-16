@@ -1,0 +1,135 @@
+
+    <span id="CurrentCreditCard" style="display: <%= "none" if !resource.has_payment? %>">
+        Current Card: <strong id="PaymentIdentifier"><%= resource.get_payment_identifier %></strong><br/>
+        <a href="#" id="ShowCCForm">Change Payment Information</a>
+    </span>
+
+    <span id="CurrentCreditCardNoCard" style="display: <%= "none" if resource.has_payment? %>">
+      <p><strong style="color: #f00">No payment information is on file.</strong> Please enter the information for the credit card you would like to use for your Cowork membership and purchases.</p>
+    </span> 
+
+    <div id="CCForm" style="display:<%= "none" if resource.has_payment? %>">
+     
+      <form action="" method="POST" id="payment-form">
+        <div class="payment-errors"></div>
+        <div class="field">
+          <%= label_tag :card_number, "Card Number" %>
+          <%= text_field_tag :card_number, nil, name: nil %>
+        </div>
+        <div class="field">
+          <%= label_tag :card_code, "Security Code (CVC)" %>
+          <%= text_field_tag :card_code, nil, { name: nil, size: 4 } %>
+        </div>
+        <div class="field">
+          <%= label_tag :card_month, "Expires" %>
+          <%= select_month nil, {add_month_numbers: true}, {name: nil, id: "card_month"} %>
+          <%= select_year nil, {start_year: Date.today.year, end_year: Date.today.year+15}, {name: nil, id: "card_year"} %>
+        </div>
+         <div style="padding-top: 10px">
+        <button id="CCSave" type="submit" class="submit-button">
+          <% if resource.has_payment? %>
+            Update Payment Information
+          <% else %>
+            Save Payment Information
+          <% end %>
+        </button>
+        </div>
+      </form>
+      <p>We have gone above and beyond to ensure your payment information is securely managed. All of your information is strongly encrypted over our secure connection and kept by a <a href="http://usa.visa.com/download/merchants/cisp-list-of-pcidss-compliant-service-providers.pdf" target="_new">PCI DSS-compliant Level 1</a> verified provider.</p>
+
+      
+
+<script type="text/javascript">
+  $(document).ready(function() {
+
+    $('#CCDelete').on("click", function() {
+
+       var linkObj = $(this);
+       linkObj.off("click");
+       
+       if (confirm("This will cancel your active membership until you enter new payment information. Proceed?"))
+       {
+          linkObj.text("Please Wait...");
+          $.post('/users/account/cc/delete',{},
+              function(data, textStatus, jqXHR) {
+
+                  linkObj.hide();
+                  $(".payment-errors").hide();
+                  $('#MembershipHasCard').hide();
+                  $('#MembershipNoCard').show();
+                  
+                  $('#CurrentCreditCard').hide();
+                  $('#CurrentCreditCardNoCard').show();
+
+                  refreshMembershipOptions();
+              }
+          );
+       }
+    });
+
+    $('#ShowCCForm').click(function() { 
+      $("#CCForm").toggle(); 
+      return false; 
+    });
+    
+    // handle the form submission
+    $("#payment-form").submit(function(event) {
+
+      $(".payment-errors").text("");
+      $(".payment-errors").hide();
+      
+      $('.submit-button').attr("disabled", "disabled");
+      $('#CCSave').text("Please Wait...");
+
+      Stripe.createToken({
+              number: $('#card_number').val(),
+              cvc: $('#card_code').val(),
+              exp_month: $('#card_month').val(),
+              exp_year: $('#card_year').val()
+              }, 
+
+              function (status, response) {
+                  if (response.error) {
+                      // show the errors on the form
+                      $(".payment-errors").text(response.error.message);
+                      $(".payment-errors").fadeIn();
+                      $(".submit-button").removeAttr("disabled");
+                      $('#CCSave').text("Save Payment Information");
+
+                      refreshMembershipOptions();
+                  } else {
+                      var token = response['id'];
+                      $.post('/users/account/cc', { "token" : token }, function(data, textStatus, jqXHR)
+                      {
+                          if (data.token != token)
+                          {
+                            $(".payment-errors").text(data.token);
+                            $(".payment-errors").fadeIn();
+                            
+
+                            $(".submit-button").removeAttr("disabled");
+                            $('#CCSave').text("Save Payment Information");
+    
+                          } else {
+                             $('#MembershipHasCard').show();
+                             $('#MembershipNoCard').hide();
+
+                             $('#CurrentCreditCardNoCard').hide();
+                             $('#PaymentIdentifier').text(data.identifier);
+                             $('#CurrentCreditCard').fadeIn();
+
+                            $('#CurrentCreditCard').html("Success! Your payment information has been updated.");
+                            $("#CCForm").hide();
+                          }
+
+                          refreshMembershipOptions();
+                      });// post
+                  }
+              } // response handler
+      ); // createToken
+
+      // prevent the form from submitting with the default action
+      return false;
+    });
+});
+</script>

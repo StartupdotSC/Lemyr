@@ -1,0 +1,26 @@
+<div id="SocialSignIn">
+<h2>Social Sign In</h2>
+<%= render :partial => "social", :locals => {:action_text => "Sign In" } %>
+</div>
+
+<div>
+<h2>Sign In</h2>
+
+<%= form_for(resource, :as => resource_name, :url => session_path(resource_name)) do |f| %>
+  <div><%= f.label :email %>
+  <%= f.email_field :email %></div>
+
+  <div><%= f.label :password %>
+  <%= f.password_field :password %></div>
+
+  <% if devise_mapping.rememberable? -%>
+    <div><%= f.check_box :remember_me %> <%= f.label :remember_me %></div>
+  <% end -%>
+
+  <div><%= f.submit "Sign in" %></div>
+
+  <%= render "devise/shared/links" %>
+
+<% end %>
+</div>
+

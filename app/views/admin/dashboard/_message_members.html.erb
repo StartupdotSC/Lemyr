@@ -1,0 +1,16 @@
+<%= form_tag("/admin/users/message", :method => "post") do %>
+  <br/>
+  <%= label_tag(:send_to, "Send To:") %>
+  <%= select(nil, :send_to,  [[ 'All Members', 0 ], 
+                              [ 'Paying Subscription Members', 1 ], 
+                              [ 'Badge Holders', 2 ]
+                              # ,[ 'Paul (Debug/Test)', 3 ]
+                              ]) %>
+  <br/><br/>
+  <%= label_tag(:subject, "Subject:") %>
+  <%= text_field_tag(:subject, nil) %>
+  <br/><br/>
+  <%= text_area_tag(:message, nil, :input_html => {:class => 'tinymce'}) %>
+
+   <%= submit_tag("Send Message") %>
+<% end %>

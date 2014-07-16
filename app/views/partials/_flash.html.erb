@@ -1,0 +1,11 @@
+<%- flash.each do |key, msg| -%>
+  <div class="flash <%= key %>">
+    <p><%= msg %></p>
+    <div class="clear"></div>
+  </div>
+<%- end -%>
+
+<div class="flash notice_js" style="display: none;">
+    <p></p>
+    <div class="clear"></div>
+</div>

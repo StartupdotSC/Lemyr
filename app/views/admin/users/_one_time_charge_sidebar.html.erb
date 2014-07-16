@@ -1,0 +1,12 @@
+<%= form_tag("/admin/users/user_charge", :method => "post") do %>
+  <%= label_tag(:user_id, "Member:") %>
+  <%= select(nil, :user_id, User.where("stripe_id IS NOT NULL and stripe_id != ''").order('name asc').collect {|s| [ s.name, s.id ] },  :prompt => "Select a Member") %>
+   <br/><br/>
+  <%= label_tag(:description, "Description:") %>
+  <%= text_field_tag(:description, nil, :placeholder => "What is this charge for?" ) %>
+  <br/><br/>
+  <%= label_tag(:amount, "Amount:") %>
+  <%= text_field_tag(:amount, nil, :placeholder => "0.00" ) %>
+  <br/><br/>
+  <%= submit_tag("Apply Charge", :confirm => "Are you sure you want to apply this charge?") %>
+<% end %>

@@ -1,0 +1,49 @@
+<div id="SelectMembership">
+    <%
+
+     @membership_options = Hash.new
+
+     #conditions = "self_service != FALSE"
+     #conditions += " AND (stripe_id IS NULL OR stripe_id = '')" if !resource.has_payment?
+     #@membership_options = Hash[Membership.where(conditions).collect do |m| [m.get_label, m.id] end]
+
+     #if !resource.membership.nil? and !@membership_options.has_value?(resource.membership.id)
+     # @membership_options[resource.membership.get_label] = resource.membership.id 
+     #end
+
+     if true # @membership_options.size > 0
+    %>
+        <h3>Membership</h3>
+
+        <%- if !resource.membership.nil? %>
+        <em>Current Membership: <strong><%=resource.membership.name%></strong></em>
+        <% end -%>
+
+        <div id="MembershipHasCard" style="margin-top: 10px;">
+        <em>Self Service Membership Options</em><br/>
+        <%= select(:user, :membership_id, @membership_options ) %>
+
+        <% if !resource.has_payment? %>
+        <div><strong>Some membership options aren't available until you enter valid payment information below.</strong></div>
+        <% end %>
+
+        <div style="padding-top: 5px">
+            <input name="commit" type="submit" value="Change Membership">
+        </div>
+        </div>
+    
+    <% else %>
+
+        <div id="MembershipNoCard">
+        <i><strong>
+        <% if !resource.has_payment? %>
+          You must enter your payment information <strong>first</strong> before you can select other membership options.
+        <% else %>
+          There are no membership options for you currently
+        <% end %>
+        </strong></i>
+        </div>
+
+         <i><a href="<%=LocationSettings.get.membership_plans_url%>" target="_new">Details and pricing</a>. Please inquire directly about membership plans that are not available through self service.</i><br/><br/>
+    <% end %>
+    </div> <!-- Select Membership -->

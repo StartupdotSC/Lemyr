@@ -1,0 +1,111 @@
+<script type="text/javascript" src="https://js.stripe.com/v1/"></script>
+
+
+<div id="PaymentInfo">
+  <h1>Day Passes</h1>
+  <p><em>Looking to change to a monthly membership option?</em> <a href="/users/edit">You can do that here</a>.</p>
+
+  <p>A day pass allows for a single visit during normal business hours (Monday - Friday, 9am until 6pm). Users are provided with a access card that allows them to leave and re-enter the space as often as they like during that day. Day passes currently do not expire.</p>
+
+
+  <h2>Purchase</h2>
+  <%- if !current_user.membership.nil? and current_user.membership.discounts_daypass %>
+  <div class="flash nofade" style="font-size: 14px;"><strong><%= "Hey! Your #{current_user.membership.name} membership earns you a #{(current_user.membership.daypass_discount.nil? ? LocationSettings.get.daypass_discount : current_user.membership.daypass_discount).to_i}% discount on day pass purchases." %></strong></div>
+  <% end -%>
+  <form action="" method="POST" id="payment-form">
+  <%
+    opts = LocationSettings.get
+    if !current_user.membership.nil? and current_user.membership.discounts_daypass
+
+      if !current_user.membership.daypass_discount.nil?
+        discount = (current_user.membership.daypass_discount/100)
+      else
+        discount = (opts.daypass_discount/100)
+      end
+
+      # inverse the discount to make it a simple multiply
+      discount = 1.0 - discount
+      
+      daypass_options = { "1 Day Pass (#{number_to_currency(opts.daypass_price * discount)})" => 1, 
+                        "Day Pass 3 Pack (#{number_to_currency(opts.daypass_price3 * discount)})" => 3, 
+                        "Day Pass 5 Pack (#{number_to_currency(opts.daypass_price5 * discount)})" => 5 }
+    else
+      daypass_options = { "1 Day Pass (#{number_to_currency(opts.daypass_price)})" => 1, 
+                        "Day Pass 3 Pack (#{number_to_currency(opts.daypass_price3)})" => 3, 
+                        "Day Pass 5 Pack (#{number_to_currency(opts.daypass_price5)})" => 5 }
+    end
+  %>
+  <%= select(nil, :amount, daypass_options) %>
+  </br>
+  <h4>Payment</h4>
+
+ <%- if current_user.has_payment? %>
+  <span id="CurrentCreditCard">
+        <input type="radio" id="payment_option" name="payment_option" value="file" checked>
+        Use Card: <strong id="PaymentIdentifier"><%= current_user.get_payment_identifier %></strong><br/>
+  </span>
+  
+  <div>
+    <input type="radio" id="payment_option" name="payment_option" value="new"> 
+    Use a different card for this transaction   
+  </div>
+
+  <% else %>
+    <input type="hidden" id="payment_option" name="payment_option" value="new">
+  <% end -%>
+  <div class="payment-errors"></div>
+  <div class="payment-info"></div>
+  <div id="CCForm" style="display: <%= "none" if current_user.has_payment? %>"> 
+      <div class="field">
+        <%= label_tag :card_number, "Card Number" %>
+        <%= text_field_tag :card_number, nil, name: "card_number" %>
+      </div>
+      <div class="field">
+        <%= label_tag :card_code, "Security Code (CVC)" %>
+        <%= text_field_tag :card_code, nil, { name: "card_code", size: 4 } %>
+      </div>
+      <div class="field">
+        <%= label_tag :card_month, "Expires" %>
+        <%= select_month nil, {add_month_numbers: true}, {name: "card_month", id: "card_month"} %>
+        <%= select_year nil, {start_year: Date.today.year, end_year: Date.today.year+15}, {name: "card_year", id: "card_year"} %>
+      </div>
+
+    <p>We have gone above and beyond to ensure your payment information is securely managed. All of your information is strongly encrypted over our secure connection and kept by a <a href="http://usa.visa.com/download/merchants/cisp-list-of-pcidss-compliant-service-providers.pdf" target="_new">PCI DSS-compliant Level 1</a> verified provider.</p>
+  </div>
+
+ <div style="padding-top: 10px">
+      <button id="CCSubmit" type="submit" class="submit-button">Purchase Passes</button>
+ </div>
+    </form>
+
+  <h2>Transfer</h2>
+  <p>Want to hook someone up with passes? Specify an email address and we'll take it from there. </p>
+    <form action="" method="POST" id="transfer-form">
+        <p>
+          <em> You currently have <%= current_user.daypass_balance %> transferrable <%= "pass".pluralize(current_user.daypass_balance) %>.</em> 
+        </p>
+
+      <div class="transfer-errors"></div>
+       <div class="transfer-info"></div>
+       <div class="field">
+        <%= label_tag :quantity, "Number of Passes to Transfer" %>
+   
+        <%= text_field_tag :quantity, nil, name: "quantity" %>
+
+      </div>
+
+      <div class="field">
+        <%= label_tag :to_email, "Email of Recipient" %>
+        <%= text_field_tag :to_email, nil, name: "to_email" %>
+      </div>
+      <div style="padding-top: 10px">
+        <button id="TransferSubmit" type="submit" class="submit-button">Transfer Passes</button>
+      </div>
+    </form>
+
+
+</div>
+
+
+
+    

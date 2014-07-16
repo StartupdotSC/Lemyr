@@ -1,0 +1,2 @@
+module StripeEventsHelper
+end

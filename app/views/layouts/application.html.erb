@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en" class="<%= controller_name %>">
+ <head>
+  <title><%=LocationSettings.get.name%></title>
+  <meta http-equiv="X-UA-Compatible" content="IE=9" />
+  <link href='//fonts.googleapis.com/css?family=Roboto+Condensed:400italic,700italic,400,700' rel='stylesheet' type='text/css'>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <%= stylesheet_link_tag    "scaffolds", :media => "all" %>
+  <%= stylesheet_link_tag    "application", :media => "all" %>
+  <%= javascript_include_tag "application" %>
+
+  <%
+  api = LocationSettings.get.integration(:rollbar)
+  if !api.nil?
+  %>
+    <script>
+      var _rollbarParams = {"server.environment": "production"};
+      _rollbarParams["notifier.snippet_version"] = "2"; var _rollbar=["<%= api.app %>", _rollbarParams]; var _ratchet=_rollbar;
+      (function(w,d){w.onerror=function(e,u,l){_rollbar.push({_t:'uncaught',e:e,u:u,l:l});};var i=function(){var s=d.createElement("script");var
+      f=d.getElementsByTagName("script")[0];s.src="//d37gvrvc0wt4s1.cloudfront.net/js/1/rollbar.min.js";s.async=!0;
+      f.parentNode.insertBefore(s,f);};if(w.addEventListener){w.addEventListener("load",i,!1);}else{w.attachEvent("onload",i);}})(window,document);
+    </script>
+   <%
+   end
+   %>
+
+  <%
+   api = LocationSettings.get.integration(:stripe)
+   if !api.nil?
+  %>
+    <%= javascript_tag do %>
+       $(document).ready(function() {
+          if (typeof(Stripe) != "undefined")
+          {
+            Stripe.setPublishableKey("<%= Rails.env.production? ? api.app : api.oauth_token%>");
+          }
+        });
+    <% end %>
+  <% end %>
+
+  <%= csrf_meta_tags %>
+  <link rel="shortcut icon" href="/assets/favicon.ico"/>
+
+</head>
+<body class="<%= controller_name %>">
+    <%= render :partial => "partials/flash", object: flash %>
+
+    <div id="MainContainer" class="row-fluid">
+
+        <div class="span9">
+
+          <div id="content">
+          <%= yield %>
+          </div>
+
+        </div>
+        <div class="span3">
+
+          <% if user_signed_in? and current_user.agreement %>
+            <div id="LoggedInAs">
+
+            <p>
+              <strong><%= current_user.name %></strong>
+            </p>
+
+            <div class="profile_pic" style="background-image: url('<%=current_user.avatar_attached.url%>');">
+            </div>
+
+            <ul>
+               <% if current_user.can_check_in? %>
+              <li><%= link_to (user_signed_in? ? "Change Status" : "Check In"), "#", { :class => "CheckInLink" }  %></li>
+              <li><%= link_to "Check Out", "#", { :id => "CheckOutLink", :data => { :user => current_user.id } } %></li>
+              <% end %>
+
+
+
+              <li><%= link_to 'Account Settings', edit_user_registration_path %></li>
+
+              <li>
+                <span id="HasDayPasses" style="display: none;">
+                  Day Pass Balance: (<span id="DaypassBalance"><%= current_user.total_passes %></span>)
+                  <a href="/purchase">Buy/Transfer</a>
+                </span>
+                <span id="NoDayPasses" style="display: none;">
+                  <a href="/purchase">Purchase Day Passes</a>
+                </span>
+              </a></li>
+
+              <li><%= link_to "Logout", destroy_user_session_path, method: :delete %></li>
+
+               <li><a href="/status">Status History</a></li>
+
+
+              <% if !current_user.mailbox_number.nil? and !current_user.mailbox_number.empty? %>
+                <li>Mailbox: #<%= current_user.mailbox_number %></li>
+              <% end %>
+
+            </ul>
+
+            <ul>
+              <li><a href="/wiki">Wiki</a></li>
+            </ul>
+
+            </div>
+        <% end %>
+
+        <span id="HomeLogo">
+            <a href="/"><%= image_tag('lemyr-banner.png') %></a>
+        </span>
+
+      </div>
+    </div>
+
+    <span id="Footer"><div id="GeoInfo"></div></span>
+
+    <% if !current_user.nil? %>
+
+    <div id="CheckInDialog" class="modal hide fade"
+          data-keyboard="false" data-backdrop="static"
+          tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+      <h2>Check In</h2>
+      <form  id="CheckInForm">
+      <img id="CheckInCancel" src="/assets/close_button.png" style="position: absolute; top: 10px; right: 10px; width: 12px;">
+      <%= select(nil, :checkin_status_id, CheckinStatus.all.collect {|s| [ s.label, s.id ] }, { :prompt => 'Availability?' }) %>
+      <input type="text" name="comment" size="40" placeholder="Optional Comment">
+      <input id="CheckInSubmit" name="commit" type="submit" value="Check In">
+      <ul>
+        <%- User.omniauth_providers.each do |provider| unless provider.eql?(:google_oauth2) %>
+        <li class="checkinoption <%= provider %>">
+            <input type="checkbox" name="<%= provider %>" id="checkin-<%= provider %>"> <%= image_tag("/assets/social_#{provider.to_s}_sm.png", :title => "Check in to " + provider.to_s.titleize) %>
+        </li>
+        <% end end -%>
+      </ul>
+      </form>
+    </div>
+    <% end %>
+
+<%- if !current_admin_user.nil? %>
+       <div style="position: fixed; bottom: 0px; width: 300px; height: 60px; text-align: center; background-color: #ffff00; ">
+        <div style="height: 60px;" class="progress progress-warning progress-striped active">
+            <div class="bar" style="height: 60px; width: 100%"> <strong>Admin logged in as</strong><%= switch_user_select  %> </div>
+        </div>
+       </div>
+<% end -%>
+
+<%= analytics_init if !LocationSettings.get.integration(:analytics).nil? %>
+</body>
+<% if !current_user.nil? %>
+<script type="text/javascript">
+    $(document).ready(function()
+        { showCheckedInMembers(<%= current_user.id %>); });
+</script>
+<% end %>
+</html>

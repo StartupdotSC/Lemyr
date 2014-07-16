@@ -1,0 +1,35 @@
+<div id="SocialSignIn">
+<h2>Social Sign Up</h2>
+<%= render :partial => "social", :locals => {:action_text => "Sign Up" } %>
+</div>
+
+<div>
+<h2>Sign up</h2>
+
+<p>The first step to joining is to create a profile on our secure member's site. Once you've created your account, you can enter your payment information, select your membership, and connect your social media accounts. <em>Some membership options may not be available via self-service</em></p>
+
+<%= form_for(resource, :as => resource_name, :url => registration_path(resource_name)) do |f| %>
+  <%= devise_error_messages! %>
+
+  <div><%= f.label :name %>
+  <%= f.text_field :name %></div>
+
+  <div><%= f.label :company_name %>
+  <%= f.text_field :company_name, :placeholder => "Optional" %></div>
+
+  <div><%= f.label :email %>
+  <%= f.email_field :email %></div>
+
+  <% if f.object.password_required? %>
+  <div><%= f.label :password %>
+  <%= f.password_field :password %></div>
+
+  <div><%= f.label :password_confirmation %>
+  <%= f.password_field :password_confirmation %></div>
+  <% end %>
+
+  <div><%= f.submit "Sign up" %></div>
+<% end %>
+
+<%= render "devise/shared/links" %>
+</div>

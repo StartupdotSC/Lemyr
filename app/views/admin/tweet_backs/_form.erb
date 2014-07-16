@@ -1,0 +1,15 @@
+<%= semantic_form_for [:admin, @tweet_back] do |f| %>
+    <%= f.inputs :tweet %>
+<h3>Substitutions</h3>
+<ul>
+    <li><strong>{user}</strong> The member's twitter handle</li>
+    <li><strong>{comment}</strong> The member's check-in comment</li>
+    <li><strong>{status}</strong> The member's availability text</li>
+</ul>
+<br/>
+<strong>Examples:</strong><br/>
+<em>Hey! {user} is coworking with us today</em><br/>
+<em>Just heard {user} say: "{comment}"</em>
+
+    <%= f.actions %>
+<% end %>

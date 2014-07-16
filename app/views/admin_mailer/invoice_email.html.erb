@@ -1,0 +1,67 @@
+<div>
+    <h3>Invoice from <%= LocationSettings.get.name %></h3>
+<strong>Date:</strong> <%= Time.at(@data['date']).to_datetime.strftime("%m/%d/%Y")%><br/>
+<strong>Billed To:</strong> <%= @user.name %> <%= (!@user.company_name.nil? and !@user.company_name.empty?) ? "/ #{@user.company_name}" : "" %>
+<br/><br/>
+<center>
+<% if !@data['paid'] and !@data['attempt_count'].nil? %>
+<em style="color: #ff0000;">This invoice has not been paid after <%= pluralize(@data['attempt_count'], "attempt") %>. We will try to process your payment again on <%= Time.at(@data['next_payment_attempt']).to_datetime.to_s(:long_ordinal) %></em><br/>
+<% end %>
+</center>
+<br/>
+<table style="border: 1px solid #ccc; width: 600px;">
+    <tr style="border: 1px solid #000;">
+        <th>Qty</th><th>Description</th><th>Dates</th><th>Amount</th>
+    </tr>
+
+<% @data['lines']['subscriptions'].each do |line| %>
+    <tr style="border: 1px solid #ccc;">
+        <td><%= line['quantity'] %></td>
+        <td><%= "#{line['plan']['name']} #{line['plan']['interval']} " %></td>
+        <td><%= Time.at(line['period']['start']).to_datetime.strftime("%m/%d/%Y")  %> - 
+            <%= Time.at(line['period']['end']).to_datetime.strftime("%m/%d/%Y")  %></td>
+        <td><%= number_to_currency(line['amount']/100.0) %></td>
+    </tr>
+<% end %>
+
+
+<% @data['lines']['prorations'].each do |line| %>
+    <tr style="border: 1px solid #ccc;">
+        <td><%= line['quantity'] %></td>
+        <td><%= line['description'] %></td>
+          <td><%= Time.at(line['period']['start']).to_datetime.strftime("%m/%d/%Y")  %> - 
+            <%= Time.at(line['period']['end']).to_datetime.strftime("%m/%d/%Y")  %></td>
+        <td><%= number_to_currency(line['amount']/100.0) %></td>
+    </tr>
+<% end %>
+
+<% @data['lines']['invoiceitems'].each do |line| %>
+    <tr style="border: 1px solid #ccc;">
+        <td><%= line['quantity'] %></td>
+        <td><%= line['description'] %></td>
+        <td>
+            <% if line.has_key?("period") %> 
+                <%= Time.at(line['period']['start']).to_datetime.strftime("%m/%d/%Y")  %> - 
+                <%= Time.at(line['period']['end']).to_datetime.strftime("%m/%d/%Y")  %>
+            <% end %>
+        </td>
+        <td><%= number_to_currency(line['amount']/100.0) if line.has_key?("amount") %></td>
+    </tr>
+<% end %>
+
+<tr>
+    <td colspan="10" style="text-align: right; border: 1px solid #ccc; padding: 5px;">
+        <strong>Total: <%= number_to_currency(@data['total']/100.0) %></strong>
+    </td>
+</tr>
+
+</table>
+
+<center>
+<% if @data['paid'] %>
+<h1 style="color: #8AC007;">PAID</h1>
+<em style="color: #8AC007;">Thank you!</em>
+<% end %>
+</center>
+</div>
+

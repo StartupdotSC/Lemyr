@@ -1,0 +1,101 @@
+<script type="text/javascript" src="https://js.stripe.com/v1/"></script>
+
+<!-- Wrapper -->
+<div class="row-fluid">
+
+<!-- Left Column -->
+<div class="span6">
+
+<div id="EditEmailPassword">
+  <%- if current_user.has_password? %>
+  <h3>Your Profile</h3>
+  <% else %>
+  <h3>Complete Your Profile</h3>
+  <% end -%>
+
+  <!-- NOTE: form ends in next column where the membership select is -->
+  <%= form_for(resource, :as => resource_name, :url => registration_path(resource_name), :html => { :method => :put }) do |f| %>
+    <%= devise_error_messages! %>
+
+  <% if resource.has_password? %>
+  <div class="clearfix">
+    <div class="profile_pic" style="float: left; background-image: url('<%=resource.avatar_attached.url%>');"></div>
+    <%= f.file_field :avatar_attached %><br/>
+    <span class="hint-text">You can also import your avatar from <a href="#social">your social profiles</a>.</span>
+  </div>
+  <% end %>
+
+  <div><%= f.label :name %>
+  <%= f.text_field :name %></div>
+
+  <div><%= f.label :company_name %>
+  <%= f.text_field :company_name, :placeholder => "Optional" %></div>
+
+  <div><%= f.label :email %>
+  <%= f.email_field :email %></div>
+
+  <div><%= f.label :phone %>
+  <%= f.text_field :phone %></div>
+
+  
+    <div><%= f.label :password %> 
+    <%- if current_user.has_password? %>
+      <i>(leave blank if you don't want to change it)</i><br/>
+    <% end -%>
+    
+    <%= f.password_field :password, :autocomplete => "off" %></div>
+
+    <div><%= f.label :password_confirmation %>
+    <%= f.password_field :password_confirmation %></div>
+
+<!--
+    <div><%= f.label :current_password %> <i>(we need your current password to confirm your changes)</i><br />
+    <%= f.password_field :current_password %></div>
+-->
+   <div style="padding-top: 10px"><%= f.submit "Save Changes" %></div>
+  
+  </div> <!-- Edit Email Password -->
+    
+    <% if resource.has_password? and resource_class.omniauth_providers.length > 0%>
+      <a name="social"></a>
+      <div id="SocialConnect">
+          <h3>Social Connect</h3>
+          <%= render :partial => "social", :locals => {:action_text => "Connect" } %>
+      </div> <!-- Social Connect -->
+    <% end %>
+
+
+</div> <!-- Left Column -->
+
+
+<!-- Right Column -->
+<div class="span6">
+  <% if resource.has_password? %>
+
+    <%= render :partial => "partials/membership", :locals => { :resource => resource } %>
+  <% end %> <!-- end the membership form -->
+
+<% end %> <!-- end form -->
+<br/>
+  <div id="PaymentInfo">
+  <h3>Payment Information</h3>
+  <% if resource.has_password? %>
+    <%= render :partial => "partials/payment", :locals => { :resource => resource } %>
+
+
+      <% if resource.has_payment? %>
+        Want to delete your payment information and cancel your membership?
+        <button id="CCDelete" class="submit-button">Cancel Subscription</button>
+      <% end %>
+    </div>
+    <p style="margin-top: 10px">Want to see your billing history? <a href="/billing">That's right here.</a></p>
+  </div> <!-- Payment Info -->
+
+  <% end %>
+
+</div> <!-- Right Column -->
+
+
+</div> <!-- Wrapper -->
+
+    

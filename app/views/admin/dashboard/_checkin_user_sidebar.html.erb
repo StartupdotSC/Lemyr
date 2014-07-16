@@ -1,0 +1,13 @@
+<%= form_tag("/admin/users/checkin", :method => "get") do %>
+  <%= label_tag(:user_id, "Member:") %>
+  <%= select(nil, :user_id, User.find(:all, :order => 'name').collect {|s| [ s.name, s.id ] }) %>
+  <br/><br/>
+  <%= label_tag(:checkin, "Status") %>
+  <%= select(nil, :checkin, {"Checking In" => 1, "Checking Out" => 0}) %>
+  <br/><br/>
+  <%= label_tag(:checkin_status_id, "Status Level (If Checking In)") %>
+  <%= select(nil, :checkin_status_id, CheckinStatus.all.collect {|s| [ s.label, s.id ] }) %>
+
+  <br/><br/>
+  <%= submit_tag("Update User") %>
+<% end %>

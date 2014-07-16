@@ -1,0 +1,26 @@
+<h3>Your Status History</h3>
+
+<p>
+<table id="Billing">
+  <tr>
+    <th>Date & Time</th>
+    <th>Status</th>
+    <th>Availability</th>
+    <th>Comment</th>
+  </tr>
+<% current_user.user_statuses.each do |s| %>
+  <tr>
+     <td><%= s.created_at.to_formatted_s(:long_ordinal) %></td>
+     <td><% if s.checkin %>
+          <span class="badge badge-success">&nbsp;&nbsp;In&nbsp;&nbsp;</span>
+         <% else %>
+          <span class="badge badge-info">Out&nbsp;</span>
+         <% end %>
+      </td>
+     <td><%= s.checkin_status %></td>
+     <td><%= s.comment %></td>
+  </tr>
+<% end %>
+</table>
+
+</p>

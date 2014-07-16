@@ -1,0 +1,15 @@
+
+
+<% if @transfer.nil? %>
+<h2>Invalid Transfer</h2>
+<p>
+ For some reason we couldn't complete your request. Either this transfer has already been redeemed by another account or the transfer code was invalid. Please double check your transfer link and try again.
+</p>
+<% else %>
+<h2>Transfer Redeemed</h2>
+<p>
+  Transferred <%= @transfer.quantity %> <%= "pass".pluralize(@transfer.quantity) %> from <%= @transfer.user.name %> to you. Your total day pass balance is now <%= current_user.total_passes %>.
+</p>
+<% end %>
+
+    

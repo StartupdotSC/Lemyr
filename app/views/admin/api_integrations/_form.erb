@@ -1,0 +1,340 @@
+
+
+<%
+    # Hi there! Want to add a new integration? It's pretty easy.
+    #
+    # Basically, we are working with ApiIntegration models which have these fields:
+    #   app, key, secret, oauth-token, oauth-secret
+    #
+    # These fields are named after common credentials for many different API's but
+    #   they can hold any string value. So this dynamic form set up allows you to present
+    #   these fields to the admin user in a way that makes sense.
+    #
+    # Adding a new service:
+    # - Add a label and identifier to the Hash below
+    # - Then create an info div (copy/paste one of the many already here)
+    # - It's nice to have a graphic that matches the service
+    # - Make sure the identifier matches the new service
+    # - Set the form labels to something that makes sense for that service
+    # - Then scroll all the way to the bottom where the form fields are and stick the identifier
+    #   into the class variable of the fields you want to appear for that service.
+
+    # Then in the code, you can get to the values this way:
+    # credentials = LocationSettings.get.integration(:stripe)
+    # puts "App value #{credentials.app}"" if !credentials.nil?
+
+    # Whee!
+
+    @providers = Hash[[
+            ["Google Analytics", "analytics"],
+            ["Twitter", "twitter"],
+            ["Facebook", "facebook"],
+            ["Google+", "google_oauth2"],
+            ["FourSquare", "foursquare"],
+            ["LinkedIn", "linkedin"],
+            ["Meetup", "meetup"],
+            ["MailChimp", "mailchimp"],
+            ["Stripe", "stripe"],
+            ["Amazon S3", "amazon_s3"],
+            ["Rollbar", "rollbar"],
+            ["SMTP/Email", "mandrill"]
+        ]]
+%>
+
+<div id="api_integration_content">
+<%= semantic_form_for [:admin, @api_integration] do |f| %>
+
+
+<%= f.input :provider, :collection => @providers, :label => "Service to Connect: " %>
+
+<div class="info analytics"
+    data-api_integration_app="Tracking Code">
+<img src="/assets/api_analytics.jpg">
+<p><strong>Google Analytics integration allows you to track web usage and patterns.</strong></p>
+<p>To get the credentials you need:
+    <ul>
+        <li> <a href="https://support.google.com/analytics/bin/answer.py?hl=en&utm_medium=et&utm_campaign=en_us&utm_source=SetupChecklist&answer=1008080" target="_new">Create a tracking code</a> for your space </li>
+        <li> The resulting tacking code is used below.</li>
+    </ul>
+</p>
+</div>
+
+<div class="info twitter"
+    data-api_integration_key="Consumer Key"
+    data-api_integration_secret="Consumer Secret">
+<img src="/assets/api_twitter.jpg">
+<p><strong>Twitter integration is used for social sign-in, check-in and <a href="/admin/tweet_backs">automated tweet backs</a>.</strong></p>
+<p>To get the credentials you need:
+    <ul>
+        <li> <a href="https://twitter.com/signup" target="_new">Create a Twitter account</a> for your space </li>
+        <li> With that account, <a href="https://dev.twitter.com/" target="_new">Sign in to the Twitter Developer site</a> </li>
+        <li> <a href="https://dev.twitter.com/apps">Go to the My Apps page</a> and click the "Create a new app" button </li>
+        <li> Fill out the form. (Put <em><%= "#{request.protocol}#{request.host}" %>/auth/twitter/callback</em> as the callback URL)</li>
+        <li> The resulting Consumer key and secret are used below.</li>
+        <li> Then create an access token (bottom of the Twitter app page) for the Oauth token and Oauth secret fields below. </li>
+    </ul>
+</p>
+</div>
+<div class="info facebook"
+    data-api_integration_key="App ID"
+    data-api_integration_secret="Secret"
+    data-api_integration_oauth_token="Place ID">
+    <img src="/assets/api_facebook.jpg">
+    <p><strong>Facebook integration is used for social sign-in and Facebook native check-in.</strong></p>
+    <p>To get the credentials you need:
+    <ul>
+        <li> <a href="https://developers.facebook.com/apps" target="_new">Create a new Facebook App</a> for your space. </li>
+        <li> On settings screen, set <em><%= "#{request.protocol}#{request.host}" %></em> as the App Domain.</li>
+        <li> Check the "Website with Facebook Login" option on the settings screen. Save app.</li>
+        <li> Put the resulting App ID and secret in the fields below. </li>
+        <li> <strong>Make sure the App is not in sandbox mode</strong></li>
+        <li> <strong>For Facebook checkins to work, you need to determine your Facebook Place ID.</strong> <br/>Tell us your Facebook place page URL and we'll try to determine your Place ID for you: <br/><em>http://facebook.com/</em><input class="facebook" type=text id="FBPlaceFinder" style="width: 100px;"><span style="margin-left: 10px;" id="FBPlaceName"></span></li>
+    </ul>
+</p>
+</div>
+<div class="info linkedin"
+    data-api_integration_key="API Key"
+    data-api_integration_secret="Secret Key">
+    <img src="/assets/api_linkedin.jpg">
+    <p><strong>LinkedIn integration is used for social sign-in and LinkedIn check-in.</strong></p>
+    <p>To get the credentials you need:
+    <ul>
+        <li> <a href="https://www.linkedin.com/secure/developer?newapp=" target="_new">Create a new LinkedIn App</a> for your space.
+        <li> Make sure the 'rw_us' checkbox is checked (this gives the ability to post user check ins to LinkedIn).</li>
+        <li> We strongly recommend setting an app logo URL. </li>
+        <li> Put the resulting API key and secret in the fields below</li>
+    </ul>
+</div>
+
+<div class="info google_oauth2"
+    data-api_integration_app="Client ID"
+    data-api_integration_secret="Client Secret"
+    data-api_integration_key="API Key">
+    <img src="/assets/api_googleplus.jpg">
+<p><strong>Google integration is used for social sign-in.</strong></p>
+    <p>To get the credentials you need:
+    <ul>
+        <li> <a href="https://code.google.com/apis/console/" target="_new">Create a new Google API project</a> for your space.
+        <li> Scroll down to the Google+ API Access and click it. Agree to the terms of service.</li>
+        <li> Click on "API Access" in the left sidebar.</li>
+        <li> Click on "Create OAuth 2.0 Client ID" button. Fill out information. Hit Next. </li>
+        <li> Select "Web Application" and click button to continue.</li>
+        <li> The resulting Client ID and Client Secret should be placed in the field below.</li>
+        <li> Click on "Create New Server Key" button. Leave the text field blank. Hit Create. </li>
+        <li> The resulting API key should be placed in the field below.</li>
+    </ul>
+</div>
+<div class="info foursquare"
+    data-api_integration_key="Client ID"
+    data-api_integration_secret="Client Secret"
+    data-api_integration_app="Venue ID"
+    data-api_integration_oauth_token="Lat Long"
+    >
+    <img src="/assets/api_foursquare.jpg">
+    <p><strong>Foursquare integration is used for social sign-in and check-in.</strong></p>
+    <p>To get the credentials you need:
+    <ul>
+        <li> <a href="https://foursquare.com/developers/apps" target="_new">Create a new Foursquare App</a> for your space.</li>
+        <li> Set the callback URL to <em><%= "#{request.protocol}#{request.host}" %>/users/auth/foursquare/callback</em></li>
+        <li>Check the "Web Connect Support" option.</li>
+        <li>Save changes and paste the Client ID and Client Secret in the fields below.</li>
+        <li><strong>For checkins to work, you need to determine your Venue ID.</strong> The easiest way to do this is to check in to the location and view your activity. Hover over the venue link and the venue ID will be a string of letters and numbers. (e.g. 5016cbe3e4b0abd876bcac96) </li>
+        <li>You can retrive the latitude-longitude if you click on the "get directions" link on your Foursquare location page, it will redirect you to Google Maps with the lat/lng (e.g. 33.702922748912606,-78.87363547603765) .</li>
+    </ul>
+
+</div>
+<div class="info meetup"
+    data-api_integration_app="Venue Id"
+    data-api_integration_key="API Key">
+    <img src="/assets/api_meetup.png">
+     <p><strong>Meetup integration is used for displaying upcoming events.</strong></p>
+    <p>To get the credentials you need:
+    <ul>
+        <li> <a href="http://www.meetup.com/meetup_api/key/" target="_new">Retrieve your API Key</a>.</li>
+        <li>The easiest way to determine the Venue ID is to <a href="http://www.meetup.com/meetup_api/console/?path=/2/event/:id" target="_new">enter a known event ID into the API console</a> and click the "Show Response" button. In the results you will see  "venue": { "id": <em>SOME VALUE</em>. Enter that value here.</li>
+    </ul>
+
+</div>
+
+<div class="info amazon_s3"
+    data-api_integration_app="Bucket Name"
+    data-api_integration_key="Access Key ID"
+    data-api_integration_secret="Access Key">
+    <img src="/assets/api_s3.png">
+     <p><strong>Amazon S3 is used for file storage such as user avatar images.</strong></p>
+    <p>To get the credentials you need:
+    <ul>
+        <li> Log in or create an <a href="http://aws.amazon.com/" target="_new">Amazon Web Services account</a>.</li>
+        <li> Follow <a href="http://docs.aws.amazon.com/AmazonS3/latest/gsg/GetStartedWithS3.html" target="_new">these instructions</a> to create a bucket.</li>
+        <li> Create a <a href="https://console.aws.amazon.com/iam/home?#users" target="_new">new user here</a> to get your security credentials set up.
+        <li></li>
+    </ul>
+
+</div>
+
+<div class="info rollbar"
+    data-api_integration_app="post_client_item"
+    data-api_integration_key="post_server_item"
+    data-api_integration_secret="Access Key">
+    <img src="/assets/api_rollbar.png">
+     <p><strong>Rollbar monitors your application for errors and notifies you when they happen.</strong></p>
+    <p>To get the credentials you need:
+    <ul>
+        <li> Log in or create a <a href="http://rollbar.com" target="_new">Rollbar account</a>.</li>
+        <li> Create a new Rollbar project.</li>
+        <li> Go to the settings for your project and select "Access Tokens"</li>
+    </ul>
+
+</div>
+
+<div class="info mandrill"
+    data-api_integration_app="SMTP Username"
+    data-api_integration_key="SMTP Password"
+    data-api_integration_oauth_secret="SMTP Host"
+    data-api_integration_oauth_token="SMTP Port"
+    data-api_integration_secret="Sender Domain">
+    <img src="/assets/api_mandrill.png">
+     <p><strong>SMTP server is used for sending emails. We recommend a service like Mandrill.</strong></p>
+    <p>To get the credentials you need:
+    <ul>
+        <li> Log in or create a <a href="http://mandrillapp.com" target="_new">Mandrill account</a>.</li>
+        <li> Go to "SMTP & API Credentials".</li>
+        <li> Add an API Key.</li>
+        <li> Enter the credentials below.</li>
+        <li> Default port is usually 587</li>
+        <li><em>Sender domain is optional depending on your hosting set up. (eg, set this to "heroku.com" if this instance is Heroku hosted.)</em></li>
+    </ul>
+
+    </p>
+
+</div>
+
+<div class="info mailchimp"
+    data-api_integration_app="List ID"
+    data-api_integration_key="API Key">
+    <img src="/assets/api_mailchimp.jpg">
+     <p><strong>MailChimp integration is used for automatically signing new members up to a specific list.</strong></p>
+    <p>To get the credentials you need:
+    <ul>
+        <li> <a href="https://us2.admin.mailchimp.com/account/api/" target="_new">Create an API Key</a>.</li>
+        <li> Determine <a href="https://us2.admin.mailchimp.com/lists/" target="_new">which of your list</a> you would like to subscribe new members to. The list id is at the bottom of the settings page for that list.</li>
+    </ul>
+
+</div>
+<div class="info stripe"
+    data-api_integration_app="Live Publishable Key"
+    data-api_integration_key="Live Secret Key"
+    data-api_integration_oauth_token="Test Publishable Key"
+    data-api_integration_oauth_secret="Test Secret Key">
+    <img src="/assets/api_stripe.jpg">
+<p><strong>Stripe is used for credit card management and processing.</strong></p>
+    <p>To get the credentials you need:
+    <ul>
+        <li> Create a Stripe.com account and log in.</a>
+        <li> <a href="https://manage.stripe.com/#account/apikeys" target="_new">View your API keys</a>.</li>
+        <li> Use the Live keys for the fields below.</li>
+        <li> <a href="https://manage.stripe.com/#account/webhooks" target="_new">Go to your Webhooks settings</a>. Add a new URL to point to <%= "#{request.protocol}#{request.host}"%>/stripe.
+    </ul>
+</div>
+
+
+    <%= f.input :location_settings_id, :as => :hidden, :value => LocationSettings.first.id %>
+
+    <%= f.input :app, :input_html => { :class => 'analytics google_oauth2 foursquare meetup mailchimp stripe amazon_s3 rollbar mandrill' } %>
+
+    <%= f.input :key, :input_html => { :class => 'twitter facebook linkedin google_oauth2 foursquare meetup mailchimp stripe amazon_s3 rollbar mandrill' } %>
+
+    <%= f.input :secret, :input_html => { :class => 'twitter facebook linkedin google_oauth2 foursquare amazon_s3 mandrill' } %>
+
+    <%= f.input :oauth_token, :input_html => { :class => 'twitter facebook stripe foursquare mandrill' } %>
+
+    <%= f.input :oauth_secret, :input_html => { :class => 'twitter stripe mandrill' } %>
+
+    <%= f.submit "Update Integration" %>
+<% end %>
+
+</div>
+
+<%= javascript_tag do -%>
+    function handleChange(provider)
+    {
+        provider = provider.toLowerCase().replace(" ","_");
+        if (provider == "")
+        {
+            $("input[type='submit']").hide();
+            provider = "poo";
+        }
+        else
+        {
+            $("input[type='submit']").fadeIn();
+        }
+
+        // hide and show desired inputs
+        $("input."+provider).parent().show();
+        $("input[type='text']:not(."+provider+")").parent().hide();
+
+        /// hide and show info box.
+        var providerInfo = $(".info."+provider);
+        providerInfo.show();
+        $(".info:not(."+provider+")").hide();
+
+        if (providerInfo.data("api_integration_key"))
+            $('label[for="api_integration_key"]').html(providerInfo.data("api_integration_key"));
+        else
+            $('label[for="api_integration_key"]').html("Key");
+
+        if (providerInfo.data("api_integration_secret"))
+            $('label[for="api_integration_secret"]').html(providerInfo.data("api_integration_secret"));
+        else
+            $('label[for="api_integration_secret"]').html("Secret");
+
+        if (providerInfo.data("api_integration_app"))
+            $('label[for="api_integration_app"]').html(providerInfo.data("api_integration_app"));
+        else
+            $('label[for="api_integration_app"]').html("App");
+
+        if (providerInfo.data("api_integration_oauth_token"))
+            $('label[for="api_integration_oauth_token"]').html(providerInfo.data("api_integration_oauth_token"));
+        else
+            $('label[for="api_integration_oauth_token"]').html("OAuth Token");
+
+        if (providerInfo.data("api_integration_oauth_secret"))
+            $('label[for="api_integration_oauth_secret"]').html(providerInfo.data("api_integration_oauth_secret"));
+        else
+            $('label[for="api_integration_oauth_secret"]').html("OAuth Secret");
+
+    }
+
+    function FBPlaceFinder(name)
+    {
+        $.getJSON('http://graph.facebook.com/' + name, function(data) {
+
+            if (!data['location'])
+            {
+                $('#api_integration_oauth_token').val("");
+                $('#FBPlaceName').html("No location is set for this Facebook URL.");
+            }
+            else
+            {
+                $('#api_integration_oauth_token').val(data['id']);
+                $('#FBPlaceName').html("<strong>Found:</strong> " + data['name']);
+            }
+
+        }).error(function() {
+            $('#api_integration_oauth_token').val("");
+            $('#FBPlaceName').html('Invalid Facebook URL');
+        });
+    }
+
+    $(document).ready(function() {
+        $('#api_integration_provider').change(function() { handleChange($(this).val()); });
+        <%- if !params[:provider].nil? %>
+            $('#api_integration_provider').val('<%= params[:provider] %>');
+        <% end -%>
+        handleChange($('#api_integration_provider').val());
+
+        $('#FBPlaceFinder').change( function() { FBPlaceFinder($(this).val()); });
+        $('#FBPlaceFinder').keyup( function() { FBPlaceFinder($(this).val()); });
+    });
+<% end -%>
+

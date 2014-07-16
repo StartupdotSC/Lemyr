@@ -1,0 +1,248 @@
+// Colors
+//$body-background-color: #6a7176;
+$primary-color: #f7903b !default;
+$secondary-color: #aaa !default;
+$text-color: #333 !default;
+$link-color: #38678b !default;
+$section-header-text-color: $primary-color !default;
+$current-menu-item-background: darken($primary-color, 12%) !default;
+$hover-menu-item-background: darken($primary-color, 12%) !default;
+$table-stripe-color: lighten($primary-color, 57%) !default;
+$table-selected-color: #d9e4ec !default;
+$error-color: #932419 !default;
+$blank-slate-primary-color: #AAA;
+$breadcrumbs-color: #8a949e;
+$breadcrumbs-separator-color: #aab2ba;
+$required-field-marker-color: #aaa;
+$form-label-color: $section-header-text-color;
+$page-header-text-color: #cdcdcd;
+
+// Sizes
+$horizontal-page-margin: 30px !default;
+$sidebar-width: 270px !default;
+$cell-padding: 5px 10px 3px 10px !default;
+$cell-horizontal-padding: 12px !default;
+$section-padding: 15px !default;
+$text-input-horizontal-padding: 10px !default;
+
+$blank-slate-border: 1px dashed #DADADA;
+
+// Active Admin's got SASS!
+@import 'active_admin/mixins';
+@import 'active_admin/base';
+@import 'font-awesome';
+
+body.active_admin #site_title {
+	display: block;
+	margin: 0;
+	padding: 0;
+	width: 53px;
+	height: 53px;
+	position: absolute;
+	left: 30px;
+	top: 9px;
+}
+
+body.active_admin #header {
+	background-image: none;
+	background-color: $primary-color;
+	padding-left: 93px;
+	position: relative;
+	height: 57px;
+	width: auto;
+
+	ul.tabs > li ul {
+		box-shadow: none;
+		-moz-box-shadow: none;
+		-webkit-box-shadow: none;
+	}
+
+	ul#tabs > li a,
+	ul#utility_nav > li a {
+		font-size: 13px;
+		border-radius: 2px;
+		-webkit-border-radius: 2px;
+		-moz-border-radius: 2px;
+		text-shadow: none;
+		&, &:link {
+			color: #FFF;
+		}
+	}
+}
+
+body.active_admin .pagination_information b {
+	color: #f7903b;
+}
+
+body.active_admin .dropdown_menu .dropdown_menu_list_wrapper .dropdown_menu_list li a,
+body.active_admin .dropdown_menu .dropdown_menu_list_wrapper .dropdown_menu_list li a:visited
+{
+	color: $body-background-color;
+}
+
+
+#api_integration_content {
+	padding: 10px;
+	border-radius: 10px;
+	border: 3px solid #f7903b;
+
+	li.input {
+		list-style-type: none;
+	}
+
+	div.info {
+		font-size: 14px;
+		padding: 10px;
+		margin: 10px;
+
+		&:before, &:after {
+			content: ' ';
+			display: table;
+		}
+		&:after {
+			clear: both;
+		}
+
+		img {
+			float: left;
+			margin: 20px;
+			height: 100%;
+		}
+
+		ul {
+			float: left;
+			margin-left: 20px;
+		}
+
+		ul li {
+			list-style: circle;
+		}
+
+		p {
+			margin-top: 10px;
+		}
+	}
+
+	label {
+		width: 20%;
+		float: left;
+		text-align: right;
+		margin-right: 1%;
+		line-height: 30px;
+	}
+
+	input[type="text"] {
+		margin-bottom: 10px;
+		width: 30%;
+	}
+
+	select {
+		height: 30px;
+		border-radius: 4px;
+	}
+
+	input[type="submit"] {
+		margin-left: 21%;
+	}
+
+	p.inline-errors {
+		color: #f00;
+		display: inline;
+		font-weight: bold;
+	}
+}
+
+body.logged_out #login h2 {
+	display: block;
+	position: relative;
+	font: 0/0 a;
+  color: transparent;
+  text-shadow: none;
+  background-color: transparent;
+  border: 0;
+
+  &:after {
+  	display: block;
+  	content: ' ';
+  	background: transparent image-url('lemyr-banner.png') no-repeat;
+  	width: 230px;
+  	height: 94px;
+  	margin: 6px auto;
+  }
+}
+
+body.active_admin form li.cancel a,
+body.active_admin form input[type=submit],
+body.active_admin form input[type=submit]:hover {
+	background-image: none;
+	font-size: 15px;
+	text-shadow: none;
+	padding: 9px 18px;
+}
+
+body.active_admin form input[type=submit] {
+	background-color: #000;
+}
+
+body.active_admin form input[type=submit]:not(.disabled):hover {
+	background-image: none;
+	background-color: $primary-color;
+}
+
+body.active_admin table.index_table th {
+ background: none;
+ background-color: #f7903b;
+ text-shadow: none;
+}
+
+body.active_admin table.index_table tr.even td {
+ background-image: none !important;
+ background-color: transparent !important;
+}
+
+body.active_admin table.index_table th.sortable.sorted-desc,
+body.active_admin table.index_table th.sortable.sorted-asc {
+ background-color: darken(#f7903b, 10%);
+ background-image: none;
+}
+
+body.active_admin table.index_table th a:link,
+body.active_admin table.index_table th a:visited {
+ color: #fff;
+}
+
+
+body.active_admin .status_tag.ok {
+ background-color: #00B820;
+}
+
+body.active_admin .status_tag.warn,
+body.active_admin .status_tag.warning, {
+ background-color: #FF0047;
+}
+
+body.active_admin .member-avatar {
+	width: 80px;
+	height: 80px;
+	margin: 0px auto;
+	background-position: 50% 50%;
+	background-size: cover;
+	background-repeat: no-repeat;
+	-webkit-border-radius:100px;
+	-moz-border-radius:100px;
+	border-radius:100px;
+}
+
+#active_admin_content h3 { margin-bottom: 1px; }
+#active_admin_content table.index_grid td.user img { float: left; padding-right: 10px; width: 72px; height: auto; }
+#active_admin_content table.index_grid td.user h3 { margin-bottom: 2px; }
+#active_admin_content table.index_grid td.user li { list-style: none; }
+
+#active_admin_content div.user_box { float: left; margin-right: 10px; text-align: center; border: 1px dotted #ccc; padding: 10px; }
+#active_admin_content div.user_box h3 a { text-decoration: none; font-size: 14px; }
+#active_admin_content div.user_box ul { list-style: none; }
+
+#active_admin_content td.user img { max-width: 72px; max-height: 72px; }
+#active_admin_content td.user ul { font-size: 10px; line-height: 1.5em; }
+#active_admin_content td.user table { padding: 0px; margin: 0px; }
+#active_admin_content td.user table td { padding: 0px; }

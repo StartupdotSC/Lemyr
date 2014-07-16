@@ -1,0 +1,63 @@
+
+    <% if !current_user.can_check_in? %>
+<div class="row-fluid">
+    <div class="span12">
+
+    <h1>Welcome to the Members site!</h1>
+    <p>
+
+    <!-- User can't check in -->
+    <strong>Check in is not available to you currently.</strong> You must be either a paid subscriber member or your day pass balance must be positive. To select a membership plan, <a href="/users/edit">Edit Your Profile</a>. Otherwise, you may <a href="/purchase">Purchase Day Passes here</a>.
+    </p>
+
+    </div>
+</div>
+    <% end %>
+
+<div class="row-fluid">
+    <div class="span12">
+        <div id="CheckedInMembers"><h2>Members Working Today</h2></div>
+         <% if current_user.can_check_in? %>
+        <div class='avatar checkin CheckInLink'>
+            <input type="button" style="font-size: 18px" class="CheckInLink" href="/checkin" value="Check In!"/>
+        </div>
+        <% end %>
+    </div>
+</div>
+
+
+<div class="row-fluid">
+    <div class="span12">
+
+        <div id="HomeNotes">
+        <% if !current_user.has_payment? %>
+            <div class="no-payment">
+            <strong>No payment information on file.</strong>
+            Add payment information in <%= link_to 'your account settings', edit_user_registration_path %>
+            </div>
+        <%
+            end
+
+            not_connected = Array.new
+            Devise.omniauth_providers.each do |provider| 
+                not_connected << provider if current_user.get_omniauth(provider).nil?
+            end
+
+            if not_connected.length > 0
+            %>
+            <div class="not-connected">
+                You have not yet connected the following <%= "service".pluralize(not_connected.length) %>:
+                <ul>
+
+                <% not_connected.each do |provider| %>
+                   <li><%= link_to( provider.to_s.titleize, omniauth_authorize_path(:user, provider)) %> </li>
+                <% end %>
+
+                </ul>
+            </div>    
+        <%      
+            end 
+        %>
+        </div>
+    </div>
+</div>

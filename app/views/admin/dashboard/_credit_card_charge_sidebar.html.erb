@@ -1,0 +1,22 @@
+  <%= form_tag("/admin/users/charge", :method => "post") do %>
+    <%= label_tag(:description, "Description:") %>
+    <%= text_field_tag(:description, nil, :placeholder => "What is this charge for?" ) %>
+    <br/><br/>
+    <%= label_tag(:email, "Email:") %>
+    <%= text_field_tag(:email, nil, :placeholder => "Email for receipt" ) %>
+    <br/><br/>
+    <%= label_tag(:amount, "Amount:") %>
+    <%= text_field_tag(:amount, nil, :placeholder => "0.00" ) %>
+    <br/><br/>
+   
+    <%= label_tag(:card_number, "Card Number:") %>
+    <%= text_field_tag(:card_number, nil, :placeholder => "No spaces or separators" ) %>
+    <br/><br/>
+    <%= label_tag(:card_month, "Expiration & CVC:") %>
+    <%= text_field_tag(:card_month, nil, :placeholder => "00", :style => "width: 15%;" ) %>/
+    <%= text_field_tag(:card_year, nil, :placeholder => "0000", :style => "width: 15%;" ) %>
+    <%= text_field_tag(:card_code, nil, :placeholder => "CVC", :style => "width: 15%;" ) %>
+    <br/><br/>
+
+     <%= submit_tag("Apply Charge", :confirm => "Are you sure you want to apply this charge?") %>
+  <% end %>

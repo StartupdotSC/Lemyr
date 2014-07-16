@@ -1,0 +1,23 @@
+<h3>Your Billing History</h3>
+
+<p>
+<table id="Billing">
+  <tr>
+    <th>Date & Time</th>
+    <th>Transaction Type</th>
+    <th>Amount</th>
+    <th>Notes</th>
+  </tr>
+<% current_user.payment_transactions.each do |t| %>
+  <tr>
+     <td><%= t.transaction_date.nil? ? t.created_at.to_formatted_s(:long_ordinal) : t.transaction_date.to_formatted_s(:long_ordinal) %></td>
+     <td><%= t.transaction_type %></td>
+     <td><%= number_to_currency(t.amount) %></td>
+     <td><%= t.description %></td>
+  </tr>
+<% end %>
+</table>
+
+</p>
+
+    
