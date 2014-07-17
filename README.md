@@ -1,5 +1,7 @@
 [![Lemyr Logo](doc/lemyr-logo.png)](http://lemyr.co)
 
+[![Dependency Status](https://gemnasium.com/CubicPhase/Lemyr.svg)](https://gemnasium.com/CubicPhase/Lemyr)
+
 Lemyr (lēmər): a web based platform for managing membership-based businesses. Originally designed for coworking spaces, Lemyr takes the tedium out of managing your members.
 
 ## Server Requirements
