@@ -6,11 +6,11 @@ if LocationSettings.count < 1
 end
 
 {'Day Pass Only' => '', 'Supporter' => '', 'Full Time' => '1', 'Nights & Weekends' => '2'}.each do |name, stripeid|
-  Membership.find_or_create_by_name_and_stripe_id(name, stripeid)
+  Membership.find_or_create_by(name: name, stripe_id: stripeid)
 end
 
 ['Just Hanging Out', 'Working but Available', 'Super Busy', 'Do Not Disturb'].each do |label|
-  CheckinStatus.find_or_create_by_label(label)
+  CheckinStatus.find_or_create_by(label: label)
 end
 
 AdminUser.create(email: 'admin@lemyr.co', password: 'whynotthebeach.com')

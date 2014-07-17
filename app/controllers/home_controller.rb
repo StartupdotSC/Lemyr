@@ -2,6 +2,10 @@ require "open-uri"
 require "rmeetup"
 
 class HomeController < ApplicationController
+  before_filter :authenticate_user!, only: [:index, :agreement, :avatar, :daypass_balance,
+    :checkin, :checkout, :membership_options, :credit_card, :credit_card_remove,
+    :billing, :status, :transfer, :purchase]
+
   def index
      if LocationSettings.get.nil?
         render :text => "Gah! You need to do some <a href='/admin'>admin set up</a>!"
@@ -25,15 +29,15 @@ class HomeController < ApplicationController
   end
 
   def avatar
-    if params.has_key? :user 
+    if params.has_key? :user
       u = User.find(params[:user])
       redirect_to u.avatar_attached.url(:thumb)
     else
       unless current_user.nil?
         current_user.select_avatar!(params[:avatar])
         render :json => { "avatar" => current_user.avatar_attached.url}
-      else 
-        render :nothing => true 
+      else
+        render :nothing => true
       end
     end
   end
@@ -49,7 +53,7 @@ class HomeController < ApplicationController
   end
 
   def checkedin_users
-    render :json => {"checkins" =>  UserStatus.get_currently_checked_in}, :include => :user 
+    render :json => {"checkins" =>  UserStatus.get_currently_checked_in}, :include => :user
   end
 
   def lobby_messages
@@ -62,11 +66,11 @@ class HomeController < ApplicationController
        events.each do |e|
          evt = e.event;
          time = Time.zone.at(evt['time']/1000)
-         isToday = time < Time.now.end_of_day 
+         isToday = time < Time.now.end_of_day
          messages << { :text => "<p class='event'><div class='#{ isToday ? "today" : "upcoming"}'>#{ isToday ? "TODAY" : "Upcoming"}: <strong>#{evt['name']}</strong></div>#{time.strftime("on %A, %B %-d <br/> at %l:%M%P")}" }
        end
     end
-    render :json => { "messages" => messages }  
+    render :json => { "messages" => messages }
   end
 
   def daypass_balance
@@ -77,23 +81,12 @@ class HomeController < ApplicationController
     end
   end
 
-  def extcheckin
-    user = User.where(:badge_user_id => params['badge_user_id']).first
-    unless user.nil?
-      params.merge! user.get_checkin_defaults
-      user.perform_checkin! params
-      render :json => { "result" => "success" }
-    else 
-      render :nothing => true 
-    end
-  end
-
   def checkin
     unless current_user.nil?
         current_user.perform_checkin! params
         render :json => { "daypass_balance" => current_user.total_passes, "user_id" => current_user.id }
-    else 
-      render :nothing => true 
+    else
+      render :nothing => true
     end
   end
 
@@ -101,8 +94,8 @@ class HomeController < ApplicationController
     unless current_user.nil?
         current_user.perform_checkout! "User Checked Out"
         render :json => { "checkout" => current_user.get_last_status.to_s, "user_id" => current_user.id }
-    else 
-      render :nothing => true 
+    else
+      render :nothing => true
     end
   end
 
@@ -110,21 +103,21 @@ class HomeController < ApplicationController
     unless current_user.nil?
       conditions = "self_service != FALSE"
       conditions += " AND (stripe_id IS NULL OR stripe_id = '')" if !current_user.has_payment?
-      membership_options = Hash[Membership.where(conditions).collect do |m| 
+      membership_options = Hash[Membership.where(conditions).collect do |m|
                                       [m.id, m.get_label]
                                     end]
 
       # Make sure the user's current membership is in the options list so it
-      # remains in tact if the select is hidden OR they can select it again 
-      # if they are looking to change. 
+      # remains in tact if the select is hidden OR they can select it again
+      # if they are looking to change.
       # *** THIS PURPOSELY IGNORES THE SELF SERVICE RESTRCTION ***
       if !current_user.membership.nil? and !membership_options.has_key?(current_user.membership.id)
-        membership_options[current_user.membership.id] = current_user.membership.get_label 
+        membership_options[current_user.membership.id] = current_user.membership.get_label
       end
-      
+
       render :json => { "options" => membership_options, "current" => current_user.membership.id }
-    else 
-      render :nothing => true 
+    else
+      render :nothing => true
     end
   end
 
@@ -132,8 +125,8 @@ class HomeController < ApplicationController
     unless current_user.nil?
         result = current_user.update_stripe! params[:token]
         render :json => { "token" => result, "identifier" => current_user.get_payment_identifier }
-    else 
-      render :nothing => true 
+    else
+      render :nothing => true
     end
   end
 
@@ -141,13 +134,9 @@ class HomeController < ApplicationController
     unless current_user.nil?
         result = current_user.remove_stripe!
         render :json => { "result" => result }
-    else 
-      render :nothing => true 
+    else
+      render :nothing => true
     end
-  end
-
-  def headlines
-    render :text => open('http://myr.sc/+/cachedrss.php?url=http://myrtlebeach.thedigitel.com/rss.xml').read(), :content_type => 'application/rss'
   end
 
   def user_directory
@@ -166,10 +155,10 @@ class HomeController < ApplicationController
 
         # determine the base price based on Location Settings
         quantity = params[:quantity].to_i
-      
+
 
         if quantity > current_user.daypass_balance
-          raise "You do not have enough passes for that! You currently have #{current_user.daypass_balance} transferrable #{"pass".pluralize(current_user.daypass_balance)}."  
+          raise "You do not have enough passes for that! You currently have #{current_user.daypass_balance} transferrable #{"pass".pluralize(current_user.daypass_balance)}."
         else
           transfer = PassTransfer.create
           transfer.user = current_user
@@ -177,22 +166,22 @@ class HomeController < ApplicationController
           transfer.to_email = params[:to_email]
           transfer.redeem_code = Devise.friendly_token.first(6)
           transfer.save!
-          AdminMailer.user_daypass_transfer(transfer).deliver 
-          current_user.deduct_daypass!(quantity, false) 
+          AdminMailer.user_daypass_transfer(transfer).deliver
+          current_user.deduct_daypass!(quantity, false)
         end
 
-      rescue Exception => e  
+      rescue Exception => e
          render :json => { "result" => "#{e.message}" }
          return;
       end
-      
+
       flash[:notice] = "Your transfer was successful!"
       render :json => { "result" => "success" }
-    elsif request.get? and params.has_key? :code 
+    elsif request.get? and params.has_key? :code
       xfer = PassTransfer.where(redeem_code: params[:code]).first
       if !xfer.nil? and !current_user.nil?
         current_user.add_daypass!(xfer.quantity)
-        AdminMailer.user_daypass_transfer_complete(xfer, current_user).deliver 
+        AdminMailer.user_daypass_transfer_complete(xfer, current_user).deliver
         @transfer = xfer.clone
         xfer.destroy
       end
@@ -231,8 +220,8 @@ class HomeController < ApplicationController
 
         if params[:payment_option].eql?("file")
           raise 'You do not have a credit card on file' if !current_user.has_payment?
-          current_user.apply_charge(charge, description) 
-          current_user.add_daypass!(amount)      
+          current_user.apply_charge(charge, description)
+          current_user.add_daypass!(amount)
         else
           card = {
                     :number => params[:card_number],
@@ -245,15 +234,15 @@ class HomeController < ApplicationController
           if !charge.paid
             raise 'There was a problem processing your request.'
           else
-            current_user.add_daypass!(amount) 
+            current_user.add_daypass!(amount)
           end
         end
 
-      rescue Exception => e  
+      rescue Exception => e
          render :json => { "result" => "#{e.message} (Details: #{charge},#{amount})" }
          return;
       end
-      AdminMailer.user_daypass_purchased(current_user, amount).deliver 
+      AdminMailer.user_daypass_purchased(current_user, amount).deliver
       flash[:notice] = "Your purchase was successful!"
       render :json => { "result" => "success" }
     end

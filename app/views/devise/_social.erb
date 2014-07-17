@@ -2,26 +2,26 @@
 <div id="SocialSignin">
   <ul>
   <%- resource_class.omniauth_providers.each do |provider| %>
-    <% 
-      provider_name = provider 
+    <%
+      provider_name = provider
       provider_name = "Google+" if provider.eql?(:google_oauth2)
     %>
 
     <li class="<%= provider %>">
         <%= link_to image_tag("/assets/social_#{provider.to_s}.png", :title => "#{action_text} with " + provider_name.to_s.titleize),
-                omniauth_authorize_path(resource_name, provider), 'data-provider' => provider.to_s.titleize %>
+                user_omniauth_authorize_path(provider), 'data-provider' => provider.to_s.titleize %>
 
         <% if !current_user.nil? and action_text.eql?"Connect" %>
                 <% @user_provider = current_user.get_omniauth(provider) %>
                 <div id="<%= provider %>-options" style="<%= "display: none" if @user_provider.nil? %>">
-                 
+
                 <% if true or !provider.eql?(:google_oauth2) %>
                  Default Check-in Setting: <input type="checkbox" auth="<%=current_user.get_omniauth(provider).id if !@user_provider.nil? %>" class="AuthenticationCheckin" <%= "checked" if !@user_provider.nil? and current_user.get_omniauth(provider).checkin %>>
                 <% else %>
                   <em>Check-in not available</em>
                 <% end %>
-                <br/> 
-                 <a href="/users/avatar/<%=provider%>" data-avatar="<%=current_user.get_avatar_for_provider(provider) if !@user_provider.nil? %>" class="AvatarSelect">Use Avatar</a> 
+                <br/>
+                 <a href="/users/avatar/<%=provider%>" data-avatar="<%=current_user.get_avatar_for_provider(provider) if !@user_provider.nil? %>" class="AvatarSelect">Use Avatar</a>
                  | <a href="#" id="<%=current_user.get_omniauth(provider).id if !@user_provider.nil? %>" class="AuthenticationDelete">Disconnect</a>
                 </div>
                 <div id="<%= provider %>-connect" style="<%= "display: none" if !@user_provider.nil? %>">

@@ -41,28 +41,27 @@ class LocationSettings < ActiveRecord::Base
     api = LocationSettings.get.integration(:facebook)
     if !api.nil?
       config.omniauth :facebook, api.key, api.secret,
-        {:scope => 'email, offline_access, read_stream, publish_stream, publish_actions',
-          :client_options => {:ssl => {:ca_file => '/usr/lib/ssl/certs/ca-certificates.crt'}}}
+        {:scope => 'email, offline_access, read_stream, publish_stream, publish_actions'}
     end
 
     api = LocationSettings.get.integration(:twitter)
     if !api.nil?
-      config.omniauth :twitter, api.key, api.secret, {:client_options => {:ssl => {:ca_file => '/usr/lib/ssl/certs/ca-certificates.crt'}}}
+      config.omniauth :twitter, api.key, api.secret
     end
 
     api = LocationSettings.get.integration(:linkedin)
     if !api.nil?
-      config.omniauth :linkedin, api.key, api.secret, {:client_options => {:ssl => {:ca_file => '/usr/lib/ssl/certs/ca-certificates.crt'}}}
+      config.omniauth :linkedin, api.key, api.secret
     end
 
     api = LocationSettings.get.integration(:google_oauth2)
     if !api.nil?
-      config.omniauth :google_oauth2, api.app, api.secret, {:client_options => {:ssl => {:ca_file => '/usr/lib/ssl/certs/ca-certificates.crt'}}}
+      config.omniauth :google_oauth2, api.app, api.secret
     end
 
     api = LocationSettings.get.integration(:foursquare)
     if !api.nil?
-      config.omniauth :foursquare, api.key, api.secret, {:client_options => {:ssl => {:ca_file => '/usr/lib/ssl/certs/ca-certificates.crt'}}}
+      config.omniauth :foursquare, api.key, api.secret
       Foursquare.configure do |config|
       config.consumer_key = api.key
       config.consumer_secret = api.secret
@@ -94,9 +93,9 @@ class LocationSettings < ActiveRecord::Base
         @@instance.configure_devise config
       end
 
-      ActiveAdmin.setup do |config|
-        @@instance.configure_active_admin config
-      end
+      # ActiveAdmin.setup do |config|
+      #   @@instance.configure_active_admin config
+      # end
 
       Lemyr::Application.configure do
         @@instance.configure_paperclip(config) if !@@instance.integration(:amazon_s3).nil?

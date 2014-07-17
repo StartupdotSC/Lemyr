@@ -1,8 +1,9 @@
 source 'https://rubygems.org'
 
-gem 'rails', '3.2.19'
+gem 'rails', '4.1.4'
 gem 'unicorn'
 gem 'dotenv-rails'
+gem 'protected_attributes' # Needed until we migrate to strong_params
 
 # Core Gems
 gem 'inherited_resources'
@@ -31,19 +32,14 @@ gem 'oauth2'
 
 # Payment Integrations
 gem 'stripe'
-gem 'stripe_event'
-
-# Wiki
-gem 'RedCloth'
-gem 'irwi', github: 'alno/irwi'
 
 # Assets
-gem 'coffee-rails', '~> 3.2.1'
+gem 'coffee-rails', '~> 4.0'
 gem 'therubyracer', platforms: :ruby
 gem 'uglifier', '>= 1.0.3'
 gem 'bootstrap-sass', '~> 2.2.2.0'
 gem 'font-awesome-sass-rails'
-gem 'sass-rails',   '~> 3.2.3'
+gem 'sass-rails',   '~> 4.0.3'
 gem 'jquery-rails'
 gem 'jquery-ui-rails'
 gem 'tinymce-rails'

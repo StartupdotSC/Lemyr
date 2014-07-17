@@ -5,8 +5,6 @@ require 'foursquare'
 require 'stripe'
 
 class User < ActiveRecord::Base
-  include ActiveModel::Dirty
-
   before_create :set_defaults
   after_create :post_create
   before_update :pre_update
@@ -32,8 +30,8 @@ class User < ActiveRecord::Base
 
   has_many :pass_transfers
   has_many :authentications, :dependent => :delete_all
-  has_many :user_statuses, :dependent => :delete_all, :order => "created_at DESC"
-  has_many :payment_transactions, :order => "created_at DESC"
+  has_many :user_statuses, ->{ order("created_at DESC") }, dependent: :delete_all
+  has_many :payment_transactions, ->{ order("created_at DESC") }
   #belongs_to :last_status, :class_name => "UserStatus"
 
   belongs_to :membership

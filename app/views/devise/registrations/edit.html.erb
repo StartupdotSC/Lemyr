@@ -19,7 +19,7 @@
 
   <% if resource.has_password? %>
   <div class="clearfix">
-    <div class="profile_pic" style="float: left; background-image: url('<%=resource.avatar_attached.url%>');"></div>
+    <div class="profile_pic" style="float: left; background-image: url('<%= resource.avatar_attached.url(:thumb) %>');"></div>
     <%= f.file_field :avatar_attached %><br/>
     <span class="hint-text">You can also import your avatar from <a href="#social">your social profiles</a>.</span>
   </div>
@@ -37,12 +37,12 @@
   <div><%= f.label :phone %>
   <%= f.text_field :phone %></div>
 
-  
-    <div><%= f.label :password %> 
+
+    <div><%= f.label :password %>
     <%- if current_user.has_password? %>
       <i>(leave blank if you don't want to change it)</i><br/>
     <% end -%>
-    
+
     <%= f.password_field :password, :autocomplete => "off" %></div>
 
     <div><%= f.label :password_confirmation %>
@@ -53,9 +53,9 @@
     <%= f.password_field :current_password %></div>
 -->
    <div style="padding-top: 10px"><%= f.submit "Save Changes" %></div>
-  
+
   </div> <!-- Edit Email Password -->
-    
+
     <% if resource.has_password? and resource_class.omniauth_providers.length > 0%>
       <a name="social"></a>
       <div id="SocialConnect">
@@ -98,4 +98,4 @@
 
 </div> <!-- Wrapper -->
 
-    
+

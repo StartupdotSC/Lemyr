@@ -6,7 +6,6 @@
   <link href='//fonts.googleapis.com/css?family=Roboto+Condensed:400italic,700italic,400,700' rel='stylesheet' type='text/css'>
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <%= stylesheet_link_tag    "scaffolds", :media => "all" %>
   <%= stylesheet_link_tag    "application", :media => "all" %>
   <%= javascript_include_tag "application" %>
 
@@ -64,7 +63,7 @@
               <strong><%= current_user.name %></strong>
             </p>
 
-            <div class="profile_pic" style="background-image: url('<%=current_user.avatar_attached.url%>');">
+            <div class="profile_pic" style="background-image: url('<%= current_user.avatar_attached.url(:thumb) %>');">
             </div>
 
             <ul>
@@ -96,10 +95,6 @@
                 <li>Mailbox: #<%= current_user.mailbox_number %></li>
               <% end %>
 
-            </ul>
-
-            <ul>
-              <li><a href="/wiki">Wiki</a></li>
             </ul>
 
             </div>

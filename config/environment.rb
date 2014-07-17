@@ -3,6 +3,3 @@ require File.expand_path('../application', __FILE__)
 
 # Initialize the rails application
 Lemyr::Application.initialize!
-
-# Load Location Settings
-LocationSettings.refresh
