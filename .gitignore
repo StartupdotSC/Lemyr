@@ -22,3 +22,4 @@
 
 # Ignore config files.
 /config/database.yml
+/config/deploy/production.rb
