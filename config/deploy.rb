@@ -2,7 +2,7 @@
 lock '3.2.1'
 
 set :application, 'lemyr'
-set :repo_url, 'git@github.com:CubicPhase/Lemyr.git'
+set :repo_url, 'https://github.com/CubicPhase/Lemyr.git'
 
 set :deploy_to, '/home/deploy/apps/lemyr'
 
