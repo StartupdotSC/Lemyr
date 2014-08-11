@@ -22,8 +22,8 @@ Lemyr::Application.routes.draw do
 
     get '/users/avatar/:provider' => 'home#avatar'
 
-    get '/users/account/cc/delete' => 'home#credit_card_remove'
-    get '/users/account/cc' => 'home#credit_card'
+    post '/users/account/cc/delete' => 'home#credit_card_remove'
+    post '/users/account/cc' => 'home#credit_card'
 
     get '/directory' => 'home#user_directory'
     get '/billing' => 'home#billing'

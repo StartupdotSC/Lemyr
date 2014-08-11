@@ -1,10 +1,10 @@
 <%= form_tag("/admin/users/credit", :method => "post") do %>
   <%= label_tag(:user_id, "Member:") %>
-  <%= select(nil, :user_id, User.find(:all, :order => 'name').collect {|s| [ s.name, s.id ] },  :prompt => "Select a Member") %>
+  <%= select(nil, :user_id, User.order('name').all.collect {|s| [ s.name, s.id ] },  :prompt => "Select a Member") %>
    <br/><br/>
   <%= label_tag(:amount, "Daypass Credit<br/>(Amount < 0 will not email user):".html_safe) %>
   <%= text_field_tag(:amount, nil, :placeholder => "Amount" ) %>
-  <!-- 
+  <!--
   <%= select(nil, :amount, {"1 Day Pass" => 1, "Day Pass 3 Pack" => 3, "Day Pass 5 Pack" => 5}) %>
   -->
   <br/><br/>

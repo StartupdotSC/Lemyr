@@ -115,7 +115,8 @@ class HomeController < ApplicationController
         membership_options[current_user.membership.id] = current_user.membership.get_label
       end
 
-      render :json => { "options" => membership_options, "current" => current_user.membership.id }
+      current_membership_id = current_user.membership.nil? ? nil : current_user.membership.id
+      render :json => { "options" => membership_options, "current" => current_membership_id }
     else
       render :nothing => true
     end
