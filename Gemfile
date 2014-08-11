@@ -2,6 +2,7 @@ source 'https://rubygems.org'
 
 gem 'rails', '4.1.4'
 gem 'unicorn'
+gem 'pg'
 gem 'dotenv-rails'
 gem 'protected_attributes' # Needed until we migrate to strong_params
 
@@ -12,6 +13,8 @@ gem 'activeadmin', github: 'gregbell/active_admin'
 gem 'switch_user'
 gem 'paperclip', '~> 3.0'
 gem 'aws-sdk' # For S3 uploads.
+gem 'rollbar'
+gem 'mandrill-api'
 
 # Social Integrations
 gem 'twitter'
@@ -47,21 +50,11 @@ gem 'google-webfonts', github: 'weilu/Google-Webfonts-Helper'
 gem 'google-analytics-rails'
 
 group :development do
-  gem 'capistrano-rails'
   gem 'letter_opener'
   gem 'better_errors'
   gem 'binding_of_caller'
-end
-
-# Configuration Specific Gems
-group :rollbar do
-  gem 'rollbar'
-end
-
-group :mandrill do
-  gem 'mandrill-api'
-end
-
-group :postgres do
-  gem 'pg'
+  gem 'capistrano-rails', '~> 1.1', require: false
+  gem 'capistrano-rbenv', '~> 2.0', require: false
+  gem 'capistrano-bundler', '~> 1.1.3', require: false
+  gem 'capistrano3-unicorn', require: false
 end
