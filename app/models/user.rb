@@ -426,9 +426,9 @@ class User < ActiveRecord::Base
 
   def has_payment?
     if !self.stripe_id.nil?
-        customer = Stripe::Customer.retrieve(self.stripe_id)
+        customer = Stripe::Customer.retrieve(id: self.stripe_id, expand: [:default_card])
         begin
-          return !customer.active_card.nil?
+          return !customer.default_card.nil?
         rescue => e
           logger.error e.message
           e.backtrace.each { |line| logger.error line }
@@ -441,9 +441,9 @@ class User < ActiveRecord::Base
 
   def get_payment_identifier
     unless self.stripe_id.nil?
-      customer = Stripe::Customer.retrieve(self.stripe_id)
-      if defined?customer.active_card and !customer.active_card.nil?
-        "#{customer.active_card.type} ending with #{customer.active_card.last4}"
+      customer = Stripe::Customer.retrieve(id: self.stripe_id, expand: [:default_card])
+      if !customer.default_card.nil?
+        "#{customer.default_card.brand} ending with #{customer.default_card.last4}"
       else
         "None"
       end
@@ -453,7 +453,7 @@ class User < ActiveRecord::Base
   def remove_stripe!
     begin
       if !self.stripe_id.nil?
-        customer = Stripe::Customer.retrieve(self.stripe_id)
+        customer = Stripe::Customer.retrieve(id: self.stripe_id, expand: [:default_card])
         customer.delete
         self.stripe_id = nil
       end
@@ -474,7 +474,7 @@ class User < ActiveRecord::Base
   def apply_charge(amount, description) # amount is in cents
     if !self.stripe_id.nil?
       amount = (amount * 100).to_i if !amount.is_a? Integer
-      customer = Stripe::Customer.retrieve(self.stripe_id)
+      customer = Stripe::Customer.retrieve(id: self.stripe_id, expand: [:default_card])
       charge = Stripe::Charge.create(
                             :amount => amount,
                             :currency => "usd",
@@ -499,7 +499,7 @@ class User < ActiveRecord::Base
   def update_stripe!(ccToken) #optional ccToken will update the users credit card information
     begin
 
-      customer = Stripe::Customer.retrieve(self.stripe_id) if !self.stripe_id.nil?
+      customer = Stripe::Customer.retrieve(id: self.stripe_id, expand: [:default_card]) if !self.stripe_id.nil?
 
       if customer.nil?
         customer = Stripe::Customer.create(
@@ -538,11 +538,11 @@ class User < ActiveRecord::Base
     # if we have payment information, update the cowork membership
     if membership_id_changed?
       if has_payment?
-          customer = Stripe::Customer.retrieve(self.stripe_id)
+          customer = Stripe::Customer.retrieve(id: self.stripe_id, expand: [:default_card])
           if !customer.nil?
             if !self.membership.stripe_id.blank?
               customer.update_subscription(:plan => self.membership.stripe_id)
-            elsif !customer.subscription.nil?
+            elsif customer.subscriptions.total_count > 0
               customer.cancel_subscription(:at_period_end => true)
             end
           end
@@ -552,7 +552,7 @@ class User < ActiveRecord::Base
     end
 
     if email_changed? and has_payment?
-       customer = Stripe::Customer.retrieve(self.stripe_id)
+       customer = Stripe::Customer.retrieve(id: self.stripe_id, expand: [:default_card])
           if !customer.nil?
             customer.email = self.email
             customer.save
