@@ -1,6 +1,7 @@
 class LobbyMessage < ActiveRecord::Base
-    def to_s
-        "Message"
-    end
+  attr_accessible :text
 
+  def to_s
+    "Message"
+  end
 end
