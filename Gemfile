@@ -17,7 +17,7 @@ gem 'rollbar'
 gem 'mandrill-api'
 
 # Social Integrations
-gem 'twitter'
+gem 'twitter', '~> 4.8'
 gem 'linkedin'
 gem 'koala' # Facebook
 gem 'google_plus'

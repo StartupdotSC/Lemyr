@@ -83,7 +83,6 @@ GEM
     bourbon (3.2.3)
       sass (~> 3.2)
       thor
-    buftok (0.2.0)
     builder (3.2.2)
     capistrano (3.2.1)
       i18n
@@ -125,7 +124,6 @@ GEM
     dotenv-deployment (0.0.2)
     dotenv-rails (0.11.1)
       dotenv (= 0.11.1)
-    equalizer (0.0.9)
     erubis (2.7.0)
     excon (0.38.0)
     execjs (2.2.1)
@@ -146,9 +144,6 @@ GEM
     hashie (3.2.0)
     hike (1.2.3)
     hominid (3.0.5)
-    http (0.6.1)
-      http_parser.rb (~> 0.6.0)
-    http_parser.rb (0.6.0)
     i18n (0.6.11)
     inherited_resources (1.4.1)
       has_scope (~> 0.6.0.rc)
@@ -182,14 +177,11 @@ GEM
     mandrill-api (1.0.52)
       excon (>= 0.16.0, < 1.0)
       json (>= 1.7.7, < 2.0)
-    memoizable (0.4.2)
-      thread_safe (~> 0.3, >= 0.3.1)
     mime-types (1.25.1)
     minitest (5.4.0)
     multi_json (1.10.1)
     multi_xml (0.5.5)
     multipart-post (2.0.0)
-    naught (1.0.0)
     net-scp (1.2.1)
       net-ssh (>= 2.6.5)
     net-ssh (2.9.1)
@@ -309,17 +301,10 @@ GEM
     treetop (1.4.15)
       polyglot
       polyglot (>= 0.3.1)
-    twitter (5.11.0)
-      addressable (~> 2.3)
-      buftok (~> 0.2.0)
-      equalizer (~> 0.0.9)
-      faraday (~> 0.9.0)
-      http (~> 0.6.0)
-      http_parser.rb (~> 0.6.0)
-      json (~> 1.8)
-      memoizable (~> 0.4.0)
-      naught (~> 1.0)
-      simple_oauth (~> 0.2.0)
+    twitter (4.8.1)
+      faraday (~> 0.8, < 0.10)
+      multi_json (~> 1.0)
+      simple_oauth (~> 0.2)
     tzinfo (1.2.1)
       thread_safe (~> 0.1)
     uglifier (2.5.1)
@@ -378,6 +363,6 @@ DEPENDENCIES
   switch_user
   therubyracer
   tinymce-rails
-  twitter
+  twitter (~> 4.8)
   uglifier (>= 1.0.3)
   unicorn
