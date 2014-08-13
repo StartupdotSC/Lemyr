@@ -6,7 +6,7 @@ class CustomFooter < ActiveAdmin::Component
 end
 
 ActiveAdmin.setup do |config|
-  config.site_title_image = "/assets/admin_logo.png"
+  config.site_title_image = "admin_logo.png"
 
   # == Default Namespace
   #

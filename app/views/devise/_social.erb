@@ -8,8 +8,8 @@
     %>
 
     <li class="<%= provider %>">
-        <%= link_to image_tag("/assets/social_#{provider.to_s}.png", :title => "#{action_text} with " + provider_name.to_s.titleize),
-                user_omniauth_authorize_path(provider), 'data-provider' => provider.to_s.titleize %>
+        <%= link_to image_tag("social_#{provider.to_s}.png", :title => "#{action_text} with " + provider_name.to_s.titleize),
+                omniauth_authorize_path(resource_class, provider), 'data-provider' => provider.to_s.titleize %>
 
         <% if !current_user.nil? and action_text.eql?"Connect" %>
                 <% @user_provider = current_user.get_omniauth(provider) %>
