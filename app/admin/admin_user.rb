@@ -1,5 +1,5 @@
 ActiveAdmin.register AdminUser do
-  menu :label => "Administrator Users", :parent => "Location"
+  menu :label => "Administrators", priority: 20
 
 
   index do
