@@ -9,7 +9,7 @@ gem 'protected_attributes' # Needed until we migrate to strong_params
 # Core Gems
 gem 'inherited_resources'
 gem 'devise', '~> 3.2.4'
-gem 'activeadmin', github: 'gregbell/active_admin'
+gem 'activeadmin', github: 'activeadmin'
 gem 'switch_user'
 gem 'paperclip', '~> 3.0'
 gem 'aws-sdk' # For S3 uploads.
