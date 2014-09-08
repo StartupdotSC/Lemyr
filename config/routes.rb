@@ -20,7 +20,7 @@ Lemyr::Application.routes.draw do
     get '/transfer/:code' => 'home#transfer'
     post '/transfer' => 'home#transfer'
 
-    get '/users/avatar/:provider' => 'home#avatar'
+    post '/users/avatar/:provider' => 'home#avatar'
 
     post '/users/account/cc/delete' => 'home#credit_card_remove'
     post '/users/account/cc' => 'home#credit_card'
