@@ -101,7 +101,13 @@
         <% end %>
 
         <span id="HomeLogo">
-            <a href="/"><%= image_tag('lemyr-banner.png') %></a>
+            <a href="/">
+              <% if LocationSettings.get.logo_url.blank? %>
+                <%= image_tag('lemyr-banner.png') %>
+              <% else %>
+                <%= image_tag(LocationSettings.get.logo_url) %>
+              <% end %>
+            </a>
         </span>
 
       </div>

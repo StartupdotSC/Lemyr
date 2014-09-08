@@ -319,7 +319,7 @@ img#Avatar { border: 1px solid #000; }
 #SocialSignin li { list-style-type:none; display: inline; }
 #SocialSignin li img { vertical-align:middle; width: 64px; }
 
-#HomeLogo { position: absolute; right: 5px; bottom: 5px; }
+#HomeLogo { position: absolute; right: 5px; bottom: 5px; max-width: 300px; }
 
 #SignUp { padding-top: 20px; }
 
