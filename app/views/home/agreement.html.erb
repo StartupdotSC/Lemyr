@@ -2,57 +2,7 @@
 <h3>You must agree to the latest terms of membership below.</h3>
 <% end %>
 
-<h4>EXPECTATIONS OF ALL MEMBERS</h4>
-
-<ul>
-<li>Treat other members with courtesy and respect.</li>
-<li>Treat the space with respect.</li>
-<li>Keep current with membership dues.</li>
-<li>Contribute work for the good of community, including cleaning, marketing, and other activities that increase the livability of the space and financial viability of the community.</li>
-</ul>
-
-<h4>COWORK MYR MEMBERS’ USER AGREEMENT</h4>
-
-<p>This is a User Agreement is between the Cubic Phase Inc (“CPINC”) and a Member of the Cowork MYR Community (henceforward “Member”). This agreement specifically pertains to the use of the Coworking MYR space at 601 21st Avenue North, Myrtle Beach, SC 29577 (“Cowork MYR”), and its Events, to which any Member might bring Guests.</p>
-
-<p>THE TERMS OF THIS AGREEMENT WILL BE UPDATED PERIODICALLY BY CPINC. EACH MEMBER WILL BE NOTIFIED OF THESE CHANGES MORE THAN ONE BILLING CYCLE BEFORE THEY GO INTO EFFECT, AND CAN EITHER 1) SIGN THEM ELECTRONICALLY WHEN THEY GO INTO EFFECT, OR 2) CHOOSE TO TERMINATE ONGOING MEMBERSHIP IF THEY SO WISH. BARRING OUTRAGEOUS CIRCUMSTANCES, THIS AGREEMENT WILL NOT BE MODIFIED MORE THAN ONCE PER CALENDAR QUARTER</p>
-
-<h4>AGREEMENT</h4>
-
-<p>Member is permitted access (corresponding to his/her membership level) to Cowork MYR for the purposes of:</p>
-
-<ul>
-<li>Gathering socially with other Members and their Guests</li>
-<li>Conducting business, including meeting with limited numbers of Guests consistent with the Expectations of Members listed above
-<li>Hosting private or public Events and meetings consistent with the Expectations of Members</li>
-<li>Reserving conference rooms (corresponding to his/her membership level)</li>
-<li>Accessing the Internet via wifi or wired Ethernet</li>
-<li>Using the kitchen and bathroom</li>
-<li>24x7 access to these community resources (corresponding to his/her membership level)</li>
-</ul>
-
-<p>Members are solely responsible for loss of and/or damage to their equipment and belongings. Aside from snacks provided by Cowork MYR, all food and drink (including food at parties, lunches, beverages, etc.) consumed socially on the premises is considered to be offered by one Member or Guest to another, and is not in any way warranted or monitored by the CPINC itself.  Each Member agrees to indemnify and hold CPINC harmless from and against all liability of every kind and nature arising out of food and drink provided by such Member to Guests and other Members.</p>
-
-<p>Prior to signing this agreement, Member must present a valid credit card, which will be charged membership dues each month (corresponding to his/her membership level). Cases in which payment is denied by the card issuer will be re-billed immediately after notifying the Member, and a third failure will terminate Member’s rights under this agreement.</p>
-
-<p>Member can, at any time, terminate membership, and will not be subsequently billed. Members whose membership is terminated by the CPINC will have their current month’s dues refunded.  All outgoing Members are asked to do the following within 2 weeks:</p>
-
-<ol>
-<li>Return their RFID or physical key (if any)</li>
-<li>Remove any possessions from the space (any items remaining after 2 weeks will be donated to a charitable organization)</li>
-<li>File a change of address with the USPS (any mail arriving after 2 weeks will be returned to sender)</li>
-</ol>
-
-<p>Circumstance that will result in the CPINC terminating membership:</p>
-
-<ul>
-<li>Abusive behavior or any behavior inconsistent with the Expectations of Members — which may be revised from time to time</li>
-<li>Behavior that the CPINC reasonably believes will result in harm to any Member, Guest, or other</li>
-<li>Substantial complaints from other Members or Guests</li>
-<li>Independent decision of CPINC based on economic or other circumstances</li>
-</ul>
-
-<p>CPINC shall have absolute discretion in determining whether a Membership should be terminated.</p>
+<%= LocationSettings.get.user_agreement.html_safe %>
 
 <% if !current_user.nil? and !current_user.agreement %>
 <p>If you accept these terms, please click the link below.</p>

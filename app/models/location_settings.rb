@@ -1,5 +1,5 @@
 class LocationSettings < ActiveRecord::Base
-  attr_accessible :freeday, :name, :corporate_name, :logo_url, :main_site_url, :membership_id, :membership_plans_url, :location_description, :daypass_price, :daypass_price3, :daypass_price5, :daypass_discount, :sender_email, :notification_email
+  attr_accessible :freeday, :name, :corporate_name, :logo_url, :main_site_url, :membership_id, :membership_plans_url, :location_description, :daypass_price, :daypass_price3, :daypass_price5, :daypass_discount, :sender_email, :notification_email, :user_agreement
 
   has_many :api_integrations, :dependent => :delete_all
   belongs_to :membership
