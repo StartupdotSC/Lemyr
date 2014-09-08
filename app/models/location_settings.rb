@@ -64,11 +64,15 @@ class LocationSettings < ActiveRecord::Base
     api = LocationSettings.get.integration(:foursquare)
     if !api.nil?
       config.omniauth :foursquare, api.key, api.secret
-      Foursquare.configure do |config|
+    end
+  end
+
+  def configure_foursquare
+    api = LocationSettings.get.integration(:foursquare)
+    ::Foursquare.configure do |config|
       config.consumer_key = api.key
       config.consumer_secret = api.secret
       config.api_version = "20140101"
-      end
     end
   end
 
@@ -119,6 +123,7 @@ class LocationSettings < ActiveRecord::Base
         end
       end
 
+      @@instance.configure_foursquare if !@@instance.integration(:foursquare).nil?
       @@instance.configure_analytics if !@@instance.integration(:analytics).nil?
       @@instance.configure_stripe if !@@instance.integration(:stripe).nil?
 

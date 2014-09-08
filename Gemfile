@@ -21,7 +21,7 @@ gem 'twitter', '~> 4.8'
 gem 'linkedin'
 gem 'koala' # Facebook
 gem 'google_plus'
-gem 'foursquare-api', github: 'CubicPhase/foursquare-api', branch: 'master'
+gem 'foursquare-api', github: 'CubicPhase/foursquare-api', branch: 'master', require: 'foursquare'
 gem 'hominid' # MailChimp
 gem 'rMeetup', github: 'mbgeek/rmeetup', branch: 'master'
 
