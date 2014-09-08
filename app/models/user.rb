@@ -208,7 +208,7 @@ class User < ActiveRecord::Base
   end
 
   def get_last_checkin
-    UserStatus.find(:all, :conditions => ["user_id = ? and checkin = ?", self.id, true], :order => "created_at DESC", :limit => "1").first
+    UserStatus.where("user_id = ? AND checkin = ?", self.id, true).order("created_at DESC").first
   end
 
   def perform_checkout!(comment = "Checked Out")
