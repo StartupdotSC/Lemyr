@@ -2,10 +2,6 @@ Lemyr::Application.configure do
 
   config.paperclip_defaults = { :storage => :s3 }
 
-  config.assets.precompile += %w(
-    active_admin.js active_admin.css active_admin/print.css
-  )
-
   # Code is not reloaded between requests
   config.cache_classes = true
 

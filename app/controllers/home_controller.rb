@@ -7,12 +7,7 @@ class HomeController < ApplicationController
     :billing, :status, :transfer, :purchase]
 
   def index
-     if LocationSettings.get.nil?
-        render :text => "Gah! You need to do some <a href='/admin'>admin set up</a>!"
-        return
-     end
-
-     unless current_user.nil?
+    unless current_user.nil?
       redirect_to :action => :agreement if !current_user.agreement
     end
   end

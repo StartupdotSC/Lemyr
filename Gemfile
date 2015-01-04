@@ -1,20 +1,20 @@
 source 'https://rubygems.org'
 
-gem 'rails', '4.1.4'
+gem 'rails', '4.2.0'
 gem 'unicorn'
 gem 'pg'
 gem 'dotenv-rails'
 gem 'protected_attributes' # Needed until we migrate to strong_params
 
 # Core Gems
-gem 'inherited_resources'
-gem 'devise', '~> 3.2.4'
-gem 'activeadmin', github: 'activeadmin'
+gem 'devise', '~> 3.4.1'
 gem 'switch_user'
 gem 'paperclip', '~> 3.0'
 gem 'aws-sdk' # For S3 uploads.
 gem 'rollbar'
 gem 'mandrill-api'
+gem 'activeadmin', github: 'activeadmin'
+gem 'inherited_resources', github: 'josevalim/inherited_resources', branch: 'rails-4-2'
 
 # Social Integrations
 gem 'twitter', '~> 4.8'
@@ -23,7 +23,7 @@ gem 'koala' # Facebook
 gem 'google_plus'
 gem 'foursquare-api', github: 'CubicPhase/foursquare-api', branch: 'master', require: 'foursquare'
 gem 'hominid' # MailChimp
-gem 'rMeetup', github: 'mbgeek/rmeetup', branch: 'master'
+gem 'rMeetup', '~> 2.0.1'
 
 # OAuth Social Integrations
 gem 'omniauth-facebook'
@@ -37,7 +37,6 @@ gem 'oauth2'
 gem 'stripe'
 
 # Assets
-gem 'coffee-rails', '~> 4.0'
 gem 'therubyracer', platforms: :ruby
 gem 'uglifier', '>= 1.0.3'
 gem 'bootstrap-sass', '~> 2.2.2.0'
@@ -50,6 +49,9 @@ gem 'google-webfonts', github: 'weilu/Google-Webfonts-Helper'
 gem 'google-analytics-rails'
 
 group :development do
+  gem 'jazz_hands', github: 'nixme/jazz_hands', branch: 'bring-your-own-debugger'
+  gem 'pry-byebug'
+  gem 'web-console', '~> 2.0'
   gem 'letter_opener'
   gem 'better_errors'
   gem 'binding_of_caller'
